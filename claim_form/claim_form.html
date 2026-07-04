@@ -499,6 +499,9 @@ const dokumenMap = {
   'Pembelian Barang':   'Resit pembelian / invoice / quotation jika ada.',
   'Makan / Refreshment':'Resit pembelian / senarai nama peserta jika berkaitan.',
   'Training / Kursus':  'Invoice / resit bayaran / sijil / surat jemputan.',
+  'Penginapan':         'Resit hotel / invoice penginapan.',
+  'Flight':             'E-tiket / resit pembelian tiket penerbangan.',
+  'E-Hailing':          'Resit / bukti perjalanan E-Hailing (Grab, dsb).',
   'Lain-lain':          'Dokumen sokongan berkaitan.'
 };
 
@@ -549,6 +552,9 @@ function addRow() {
         <option>Pembelian Barang</option>
         <option>Makan / Refreshment</option>
         <option>Training / Kursus</option>
+        <option>Penginapan</option>
+        <option>Flight</option>
+        <option>E-Hailing</option>
         <option>Lain-lain</option>
       </select>
       <div class="mileage-box">
@@ -559,7 +565,7 @@ function addRow() {
         <label>Kadar</label><input type="text" value="RM1.00/KM (lebih 20KM)" readonly />
       </div>
     </td>
-    <td><textarea class="keterangan" rows="2"></textarea></td>
+    <td><textarea class="keterangan" rows="2" required></textarea></td>
     <td><input type="text" class="noResit" /></td>
     <td><div class="doc-note dokumenText">Sila pilih jenis claim.</div></td>
     <td><input type="file" class="files" multiple /></td>
@@ -631,6 +637,15 @@ function setStatus(type, html) {
 
 /* ── SUBMIT ── */
 async function submitClaim() {
+  for (const row of document.querySelectorAll('#claimBody tr')) {
+    const keterangan = row.querySelector('.keterangan');
+    if (!keterangan.value.trim()) {
+      keterangan.focus();
+      setStatus('error', '&#10007; Keterangan wajib diisi untuk setiap baris claim.');
+      return;
+    }
+  }
+
   setStatus('loading', '<span class="spinner"></span> Sedang menghantar claim...');
 
   const items = [];
