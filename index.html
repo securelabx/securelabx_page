@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SecureLabX</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<div id="slx-gate">
+  <div class="slx-gate-card">
+    <h1>SecureLabX</h1>
+    <p class="subtitle">Enter the access password to continue</p>
+    <form id="slx-gate-form">
+      <input type="password" id="slx-gate-password" placeholder="Password" autocomplete="current-password" required />
+      <button type="submit">Unlock</button>
+      <p id="slx-gate-error">Incorrect password. Please try again.</p>
+    </form>
+  </div>
+</div>
+
+<div id="slx-content">
+  <header class="slx-header">
+    <div class="slx-brand">SecureLabX</div>
+    <nav class="slx-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="leave-request.html">Leave Request</a>
+      <a href="claim-request.html">Claim Request</a>
+    </nav>
+  </header>
+
+  <main class="slx-main">
+    <section class="slx-hero">
+      <h1>SecureLabX</h1>
+      <p class="lead">Internal company portal — company information and staff request forms.</p>
+    </section>
+
+    <div class="slx-card">
+      <h2>About SecureLabX</h2>
+      <p>
+        SecureLabX is a company focused on delivering high-quality, secure solutions
+        for our clients and partners. This internal portal centralizes company
+        information and the request forms our team uses day to day.
+      </p>
+    </div>
+
+    <div class="slx-card">
+      <h2>What's here</h2>
+      <div class="slx-services">
+        <div>
+          <h3>Leave Request</h3>
+          <p>Submit a request for annual, sick, or other leave for management approval.</p>
+        </div>
+        <div>
+          <h3>Claim Request</h3>
+          <p>Submit an expense or reimbursement claim for processing.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slx-card">
+      <h2>Contact</h2>
+      <p>For questions about this portal, contact the SecureLabX admin team.</p>
+    </div>
+  </main>
+
+  <footer class="slx-footer">
+    &copy; <span id="slx-year"></span> SecureLabX. Internal use only.
+  </footer>
+</div>
+
+<script>document.getElementById("slx-year").textContent = new Date().getFullYear();</script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/auth.js"></script>
+</body>
+</html>
