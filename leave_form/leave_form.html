@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leave Application Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 30px 16px;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      max-width: 680px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+      color: #fff;
+      padding: 32px 36px 24px;
+    }
+
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    .form-body {
+      padding: 32px 36px;
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #1a73e8;
+      margin: 24px 0 14px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e8f0fe;
+    }
+
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    label .required {
+      color: #e53935;
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+      padding: 10px 13px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 0.93rem;
+      color: #222;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fafbff;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+      background: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .days-display {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: #1a73e8;
+      font-weight: 600;
+      min-height: 18px;
+    }
+
+    #entitlementNote {
+      margin-top: 6px;
+      font-size: 0.79rem;
+      font-weight: 600;
+      min-height: 18px;
+    }
+
+    #entitlementNote.info  { color: #1a73e8; }
+    #entitlementNote.fixed { color: #2e7d32; }
+    #entitlementNote.warn  { color: #e65100; }
+
+    #remainingBalance {
+      margin-top: 5px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      min-height: 18px;
+      color: #2e7d32;
+    }
+
+    #remainingBalance.low  { color: #e65100; }
+    #remainingBalance.none { color: #c62828; }
+
+    #staffLookupStatus {
+      margin-top: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      min-height: 16px;
+    }
+
+    #staffLookupStatus.loading { color: #888; }
+    #staffLookupStatus.success { color: #2e7d32; }
+    #staffLookupStatus.error   { color: #c62828; }
+
+    .autofilled {
+      background: #e8f5e9 !important;
+      border-color: #66bb6a !important;
+    }
+
+    .btn-submit {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 28px;
+      letter-spacing: 0.4px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.92;
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #otherLeaveGroup {
+      display: none;
+      margin-top: 12px;
+    }
+
+    #otherLeaveGroup.visible {
+      display: flex;
+    }
+
+    /* Half day */
+    .half-day-row {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .half-day-row.visible {
+      display: flex;
+    }
+
+    .half-day-row input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: #1a73e8;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .half-day-row label {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+    }
+
+    #sessionGroup {
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    #sessionGroup.visible {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .session-options {
+      display: flex;
+      gap: 24px;
+      margin-top: 8px;
+    }
+
+    .session-options label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .session-options input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #1a73e8;
+      cursor: pointer;
+    }
+
+    /* Compassionate Leave sub-options */
+    #compassionateGroup {
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    #compassionateGroup.visible {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .compassionate-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .compassionate-options label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .compassionate-options .badge {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      background: #e8f0fe;
+      color: #1a73e8;
+      border-radius: 20px;
+      padding: 1px 9px;
+      margin-left: 4px;
+    }
+
+    .compassionate-options input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #1a73e8;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Toast notification */
+    #toast {
+      display: none;
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 0.93rem;
+      font-weight: 600;
+      z-index: 9999;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      min-width: 280px;
+      text-align: center;
+      animation: slideDown 0.3s ease;
+    }
+
+    #toast.success {
+      background: #e6f4ea;
+      color: #1e7e34;
+      border: 1.5px solid #a8d5b5;
+    }
+
+    #toast.error {
+      background: #fdecea;
+      color: #c62828;
+      border: 1.5px solid #f5c6cb;
+    }
+
+    @keyframes slideDown {
+      from { top: 0; opacity: 0; }
+      to   { top: 24px; opacity: 1; }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-body { padding: 24px 18px; }
+      .header { padding: 24px 18px 18px; }
+    }
+
+    /* Upload section */
+    .upload-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 7px;
+      padding: 14px 16px;
+      background: #fafbff;
+      transition: border-color 0.2s;
+    }
+    .upload-area.error-border { border-color: #e53935 !important; }
+    .upload-area input[type="file"] {
+      width: 100%;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 4px 0;
+      outline: none;
+    }
+    .upload-hint { font-size: 0.78rem; color: #888; margin-top: 6px; }
+    #uploadStatus { margin-top: 6px; font-size: 0.82rem; font-weight: 600; min-height: 16px; }
+    #uploadStatus.success { color: #2e7d32; }
+    #uploadStatus.error   { color: #c62828; }
+
+    /* Modal */
+    #printModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 10000;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 30px 16px;
+      overflow-y: auto;
+    }
+    #printModal.visible { display: flex; }
+    .modal-card {
+      background: #fff;
+      border-radius: 10px;
+      max-width: 620px;
+      width: 100%;
+      padding: 36px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+    }
+    .modal-actions { display: flex; gap: 12px; margin-top: 28px; }
+.btn-close-modal {
+      flex: 1; padding: 11px; background: #f0f4f8; color: #444;
+      border: 1.5px solid #d1d5db; border-radius: 7px;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-close-modal:hover { background: #e2e8f0; }
+
+    /* Print slip */
+    .slip-header { text-align: center; border-bottom: 2px solid #1a73e8; padding-bottom: 14px; margin-bottom: 18px; }
+    .slip-header h2 { font-size: 1.05rem; font-weight: 700; color: #0d47a1; text-transform: uppercase; letter-spacing: 0.5px; }
+    .slip-header p  { font-size: 0.82rem; color: #555; margin-top: 3px; }
+    .slip-section   { margin-bottom: 14px; }
+    .slip-section-title {
+      font-size: 0.71rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: #1a73e8;
+      border-bottom: 1px solid #e8f0fe; padding-bottom: 4px; margin-bottom: 9px;
+    }
+    .slip-row { display: flex; font-size: 0.86rem; margin-bottom: 5px; line-height: 1.4; }
+    .slip-label { width: 145px; flex-shrink: 0; color: #555; font-weight: 600; }
+    .slip-value { color: #222; word-break: break-word; flex: 1; }
+    .slip-value a { color: #1a73e8; }
+    .slip-status {
+      text-align: center; font-size: 0.88rem; font-weight: 700;
+      color: #e65100; border: 1.5px solid #e65100;
+      border-radius: 6px; padding: 6px 12px; margin: 14px 0;
+    }
+    .slip-signatures {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin-top: 18px;
+      border-top: 1px solid #e0e0e0; padding-top: 14px;
+    }
+    .sig-box { font-size: 0.76rem; color: #555; }
+    .sig-line { border-bottom: 1px solid #999; height: 28px; margin-bottom: 5px; }
+    .sig-filled { border-bottom: 1px solid #999; padding-bottom: 4px; margin-bottom: 5px; font-size: 0.82rem; font-weight: 600; color: #222; min-height: 28px; }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Leave Application Form</h1>
+    <p>Please complete all required fields and submit your request.</p>
+  </div>
+
+  <div class="form-body">
+    <form id="leaveForm" novalidate>
+
+      <!-- Employee Information -->
+      <div class="section-title">Employee Information</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="employeeId">Staff ID <span class="required">*</span></label>
+          <input type="text" id="employeeId" name="employeeId" placeholder="e.g. SLX-001 then press Enter"
+            pattern="SLX-\d{3,}" title="Staff ID must follow the format SLX-001" required />
+          <div id="staffLookupStatus"></div>
+        </div>
+        <div class="form-group">
+          <label for="employeeName">Full Name <span class="required">*</span></label>
+          <input type="text" id="employeeName" name="employeeName" placeholder="e.g. Ahmad bin Ali" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="department">Department <span class="required">*</span></label>
+          <select id="department" name="department" required>
+            <option value="">-- Select Department --</option>
+            <option>Administration</option>
+            <option>Finance</option>
+            <option>Human Resources</option>
+            <option>Information Technology</option>
+            <option>Marketing</option>
+            <option>Operations</option>
+            <option>Sales</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="position">Position / Job Title <span class="required">*</span></label>
+          <input type="text" id="position" name="position" placeholder="e.g. Software Engineer" required />
+        </div>
+      </div>
+
+
+      <!-- Shown only when Position = Intern; value loaded from Google Sheet -->
+      <div class="form-row" id="internInfoRow" style="display:none;">
+        <div class="form-group">
+          <label for="internDurationDisplay">Internship Duration</label>
+          <input type="text" id="internDurationDisplay" name="internDuration" readonly
+            placeholder="Auto-filled from system..."
+            style="background:#f0f4f8; color:#555;" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <input type="email" id="email" name="email" placeholder="employee@company.com" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Contact Number <span class="required">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="e.g. 011-12345678" required />
+        </div>
+      </div>
+
+      <!-- Leave Details -->
+      <div class="section-title">Leave Details</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="leaveType">Leave Type <span class="required">*</span></label>
+          <select id="leaveType" name="leaveType" required>
+            <option value="">-- Select Leave Type --</option>
+            <option>Annual Leave</option>
+            <option>Medical Leave</option>
+            <option>Maternity Leave</option>
+            <option>Paternity Leave</option>
+            <option>Compassionate Leave</option>
+            <option>Emergency Leave</option>
+            <option>Unpaid Leave</option>
+            <option>Other</option>
+          </select>
+          <div id="entitlementNote"></div>
+        </div>
+        <div class="form-group" id="otherLeaveGroup">
+          <label for="otherLeaveType">Please specify <span class="required">*</span></label>
+          <input type="text" id="otherLeaveType" name="otherLeaveType" placeholder="Enter leave type..." />
+        </div>
+        <div class="form-group">
+          <label for="totalDays">Total Leave Days</label>
+          <input type="number" id="totalDays" name="totalDays" min="0.5" step="0.5" readonly
+            style="background:#f0f4f8; color:#555;" />
+          <div class="days-display" id="daysDisplay"></div>
+          <div id="remainingBalance"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startDate">Start Date <span class="required">*</span></label>
+          <input type="date" id="startDate" name="startDate" required />
+        </div>
+        <div class="form-group">
+          <label for="endDate">End Date <span class="required">*</span></label>
+          <input type="date" id="endDate" name="endDate" required />
+        </div>
+      </div>
+
+      <!-- Compassionate Leave sub-options -->
+      <div class="form-group" id="compassionateGroup">
+        <label>Family Relation <span class="required">*</span></label>
+        <div class="compassionate-options">
+          <label>
+            <input type="radio" name="compassionateType" value="Extended Family" />
+            Extended Family <span class="badge">1 day</span>
+          </label>
+          <label>
+            <input type="radio" name="compassionateType" value="Immediate Family" />
+            Immediate Family <span class="badge">2 days</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Half Day -->
+      <div class="half-day-row">
+        <input type="checkbox" id="halfDay" name="halfDay" />
+        <label for="halfDay">Half Day Leave</label>
+      </div>
+
+      <div class="form-group" id="sessionGroup">
+        <label>Session <span class="required">*</span></label>
+        <div class="session-options">
+          <label><input type="radio" name="session" value="Morning" checked /> Morning</label>
+          <label><input type="radio" name="session" value="Afternoon" /> Afternoon</label>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label for="reason">Reason for Leave <span class="required">*</span></label>
+        <textarea id="reason" name="reason" placeholder="Please briefly describe your reason for taking leave..." required></textarea>
+      </div>
+
+      <!-- Supporting Document Upload -->
+      <div class="form-group full" id="uploadGroup" style="display:none;">
+        <label for="supportingDoc">Supporting Document <span class="required">*</span></label>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="supportingDoc" accept=".pdf" />
+          <p class="upload-hint">Accepted format: PDF only &middot; Max file size: 10 MB</p>
+          <div id="uploadStatus"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">Submit</button>
+    </form>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Print Modal -->
+<div id="printModal">
+  <div class="modal-card">
+    <div id="printSlip"></div>
+    <div class="modal-actions">
+      <button class="btn-close-modal" id="closeModalBtn" style="flex:1;">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // -------------------------------------------------------
+  // IMPORTANT: Replace this URL after deploying the
+  // Google Apps Script Web App (see Code.gs instructions).
+  // -------------------------------------------------------
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUs2PEK4_zObDNu_2NOMLYcZAsbArmU12AJgd3-hWpQ4AhK2HwWP7vC0EVg0eZShJEKA/exec";
+
+  // Show/hide "Other" leave type text box
+  const leaveTypeEl     = document.getElementById("leaveType");
+  const otherLeaveGroup = document.getElementById("otherLeaveGroup");
+  const otherLeaveInput = document.getElementById("otherLeaveType");
+  const positionEl      = document.getElementById("position");
+
+  const staffLookupStatus = document.getElementById("staffLookupStatus");
+  const autoFilledFields  = ["employeeName","department","position","email","phone"];
+
+  function setAutoFilled(filled) {
+    autoFilledFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (filled) el.classList.add("autofilled");
+      else el.classList.remove("autofilled");
+    });
+  }
+
+  async function fetchEmployeeInfo() {
+    const staffId = document.getElementById("employeeId").value.trim();
+    if (!staffId) return;
+
+    if (SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") return;
+
+    staffLookupStatus.textContent = "Looking up staff...";
+    staffLookupStatus.className   = "loading";
+
+    try {
+      const url  = `${SCRIPT_URL}?action=getEmployee&staffId=${encodeURIComponent(staffId)}`;
+      const resp = await fetch(url);
+      const data = await resp.json();
+
+      if (data.status === "not_found") {
+        staffLookupStatus.textContent = "Staff ID not found.";
+        staffLookupStatus.className   = "error";
+        setAutoFilled(false);
+        return;
+      }
+
+      if (data.status !== "success") {
+        staffLookupStatus.textContent = "Lookup failed. Please fill in manually.";
+        staffLookupStatus.className   = "error";
+        return;
+      }
+
+      // Populate form fields
+      document.getElementById("employeeName").value = data.employeeName;
+      document.getElementById("email").value        = data.email;
+      document.getElementById("phone").value        = data.phone;
+
+      // Department select — match option or fall back to "Other"
+      const deptSelect = document.getElementById("department");
+      const deptMatch  = Array.from(deptSelect.options).find(o => o.value === data.department);
+      deptSelect.value = deptMatch ? data.department : "Other";
+
+      // Position
+      positionEl.value = data.position;
+      positionEl.dispatchEvent(new Event("input")); // triggers intern filter
+
+      // Intern duration
+      if (data.position.trim().toLowerCase() === "intern" && data.internDuration) {
+        const months = Number(data.internDuration);
+        internEntitlement = months;
+        internDurationDisplay.value = `${months} month${months !== 1 ? "s" : ""}`;
+      }
+
+      currentManagerName = data.managerName || "";
+      setAutoFilled(true);
+      staffLookupStatus.textContent = "Information loaded successfully.";
+      staffLookupStatus.className   = "success";
+
+      // Re-fetch balance if leave type already selected
+      if (leaveTypeEl.value) fetchBalance();
+
+    } catch {
+      staffLookupStatus.textContent = "Unable to connect. Please fill in manually.";
+      staffLookupStatus.className   = "error";
+    }
+  }
+
+  // Trigger on Enter key in Staff ID field
+  document.getElementById("employeeId").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      fetchEmployeeInfo();
+    }
+  });
+
+  // Clear auto-fill highlight when Staff ID is edited
+  document.getElementById("employeeId").addEventListener("input", function () {
+    setAutoFilled(false);
+    staffLookupStatus.textContent = "";
+    staffLookupStatus.className   = "";
+    currentManagerName = "";
+  });
+
+  // Leave types available to Interns only
+  const INTERN_LEAVE_TYPES = ["Annual Leave", "Medical Leave"];
+
+  const internInfoRow          = document.getElementById("internInfoRow");
+  const internDurationDisplay  = document.getElementById("internDurationDisplay");
+
+  // Set by fetchBalance when position is Intern; drives entitlement cap
+  let internEntitlement = null;
+  let currentManagerName = "";
+
+  function isInternPosition() {
+    return positionEl.value.trim().toLowerCase() === "intern";
+  }
+
+  function getEffectiveEntitlement(leaveType) {
+    if (isInternPosition() && internEntitlement !== null &&
+        INTERN_LEAVE_TYPES.includes(leaveType)) {
+      return { days: internEntitlement, type: "capped", unit: "days" };
+    }
+    return ENTITLEMENTS[leaveType] || null;
+  }
+
+  function filterLeaveTypesForIntern(isIntern) {
+    Array.from(leaveTypeEl.options).forEach(opt => {
+      if (opt.value === "") return;
+      opt.hidden   = isIntern && !INTERN_LEAVE_TYPES.includes(opt.value);
+      opt.disabled = opt.hidden;
+    });
+    if (isIntern && leaveTypeEl.value && !INTERN_LEAVE_TYPES.includes(leaveTypeEl.value)) {
+      leaveTypeEl.value = "";
+      leaveTypeEl.dispatchEvent(new Event("change"));
+    }
+  }
+
+  positionEl.addEventListener("input", function () {
+    const isIntern = this.value.trim().toLowerCase() === "intern";
+    internInfoRow.style.display = isIntern ? "" : "none";
+    if (!isIntern) {
+      internEntitlement = null;
+      internDurationDisplay.value = "";
+    }
+    filterLeaveTypesForIntern(isIntern);
+    if (leaveTypeEl.value) setEntitlementNote(leaveTypeEl.value);
+  });
+
+  const halfDayRow          = document.querySelector(".half-day-row");
+  const halfDayEl           = document.getElementById("halfDay");
+  const sessionGroup        = document.getElementById("sessionGroup");
+  const compassionateGroup  = document.getElementById("compassionateGroup");
+  const entitlementNote     = document.getElementById("entitlementNote");
+
+  // Entitlement config
+  // capped: user picks dates freely, warn if exceeded
+  // fixed:  end date auto-calculated, total days locked
+  const ENTITLEMENTS = {
+    "Annual Leave":     { days: 12, type: "capped", unit: "working days" },
+    "Medical Leave":    { days: 14, type: "capped", unit: "working days" },
+    "Paternity Leave":  { days: 7,  type: "fixed",  unit: "calendar days" },
+    "Maternity Leave":  { days: 90, type: "fixed",  unit: "calendar days" },
+    "Emergency Leave":  { days: 12, type: "capped", unit: "working days", sharedWith: "Annual Leave" },
+  };
+
+  function setEntitlementNote(leaveType) {
+    const e = getEffectiveEntitlement(leaveType);
+    if (!e) { entitlementNote.textContent = ""; entitlementNote.className = ""; return; }
+    if (e.type === "fixed") {
+      entitlementNote.textContent = `Entitlement: ${e.days} ${e.unit} (auto-calculated)`;
+      entitlementNote.className = "fixed";
+    } else if (e.sharedWith) {
+      entitlementNote.textContent = `Deducted from ${e.sharedWith} balance (max ${e.days} days combined)`;
+      entitlementNote.className = "info";
+    } else if (isInternPosition() && internEntitlement !== null) {
+      entitlementNote.textContent = `Intern entitlement: ${e.days} day${e.days !== 1 ? "s" : ""} (based on ${e.days}-month internship)`;
+      entitlementNote.className = "info";
+    } else {
+      entitlementNote.textContent = `Entitlement: ${e.days} ${e.unit} maximum`;
+      entitlementNote.className = "info";
+    }
+  }
+
+  // Remaining balance fetch
+  const remainingBalanceEl = document.getElementById("remainingBalance");
+
+  // Maps leave type to the balance sheet column key
+  const BALANCE_KEY = {
+    "Annual Leave":    "Annual Leave",
+    "Emergency Leave": "Annual Leave",   // shares Annual Leave pool
+    "Medical Leave":   "Medical Leave",
+    "Maternity Leave": "Maternity Leave",
+    "Paternity Leave": "Paternity Leave",
+    "Compassionate Leave": "Compassionate Leave",
+  };
+
+  async function fetchBalance() {
+    const staffId   = document.getElementById("employeeId").value.trim();
+    const leaveType = leaveTypeEl.value;
+    const balanceKey = BALANCE_KEY[leaveType];
+
+    if (!staffId || !balanceKey || SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
+      remainingBalanceEl.textContent = "";
+      remainingBalanceEl.className   = "";
+      return;
+    }
+
+    remainingBalanceEl.textContent = "Fetching balance...";
+    remainingBalanceEl.className   = "";
+
+    try {
+      const url  = `${SCRIPT_URL}?action=getBalance&staffId=${encodeURIComponent(staffId)}&leaveType=${encodeURIComponent(balanceKey)}`;
+      const resp = await fetch(url);
+      const data = await resp.json();
+
+      if (data.status === "not_found") {
+        remainingBalanceEl.textContent = "Staff ID not found in balance sheet.";
+        remainingBalanceEl.className   = "none";
+        if (isInternPosition()) internDurationDisplay.value = "";
+      } else if (data.status === "success") {
+        // Apply intern entitlement from sheet if position is Intern
+        if (isInternPosition()) {
+          if (data.internDuration) {
+            const months = Number(data.internDuration);
+            internEntitlement = months;
+            internDurationDisplay.value = `${months} month${months !== 1 ? "s" : ""}`;
+          } else {
+            internDurationDisplay.value = "Not set in system";
+          }
+          setEntitlementNote(leaveType);
+          updateDays();
+        }
+
+        const bal  = Number(data.balance);
+        const pool = leaveType === "Emergency Leave" ? "Annual Leave" : leaveType;
+        let label, cls;
+        if (bal <= 0) {
+          label = `No remaining ${pool} balance. You cannot apply for this leave.`;
+          cls   = "none";
+        } else if (bal <= 3) {
+          label = `Remaining balance: ${bal} day${bal !== 1 ? "s" : ""} (low)`;
+          cls   = "low";
+        } else {
+          label = `Remaining balance: ${bal} day${bal !== 1 ? "s" : ""}`;
+          cls   = "";
+        }
+        remainingBalanceEl.textContent = label;
+        remainingBalanceEl.className   = cls;
+      } else {
+        remainingBalanceEl.textContent = "";
+      }
+    } catch {
+      remainingBalanceEl.textContent = "Unable to fetch balance.";
+      remainingBalanceEl.className   = "none";
+    }
+  }
+
+  // Trigger balance fetch when Staff ID loses focus or Leave Type changes
+  document.getElementById("employeeId").addEventListener("blur", fetchBalance);
+
+  // Calculate end date by adding N calendar days to a start date
+  function addCalendarDays(dateStr, n) {
+    const d = new Date(dateStr);
+    d.setDate(d.getDate() + n - 1);
+    return d.toISOString().split("T")[0];
+  }
+
+  function applyFixedLeave(leaveType) {
+    const e = ENTITLEMENTS[leaveType];
+    if (!e || e.type !== "fixed") return;
+    endDateEl.disabled = true;
+    endDateEl.required = false;
+    totalDaysEl.value  = e.days;
+    daysDisplay.textContent = `${e.days} ${e.unit}`;
+    daysDisplay.style.color = "#2e7d32";
+    if (startDateEl.value) {
+      endDateEl.value = addCalendarDays(startDateEl.value, e.days);
+    }
+  }
+
+  function resetToFreeDate() {
+    endDateEl.disabled = false;
+    endDateEl.required = true;
+    updateDays();
+  }
+
+  leaveTypeEl.addEventListener("change", function () {
+    const val = this.value;
+
+    // Entitlement badge
+    setEntitlementNote(val);
+    remainingBalanceEl.textContent = "";
+    remainingBalanceEl.className   = "";
+    fetchBalance();
+
+    // "Other" text box
+    if (val === "Other") {
+      otherLeaveGroup.classList.add("visible");
+      otherLeaveInput.required = true;
+    } else {
+      otherLeaveGroup.classList.remove("visible");
+      otherLeaveInput.required = false;
+      otherLeaveInput.value = "";
+      otherLeaveInput.style.borderColor = "";
+    }
+
+    // Half day only for Annual Leave
+    if (val === "Annual Leave") {
+      halfDayRow.classList.add("visible");
+    } else {
+      halfDayRow.classList.remove("visible");
+      if (halfDayEl.checked) {
+        halfDayEl.checked = false;
+        halfDayEl.dispatchEvent(new Event("change"));
+      }
+    }
+
+    // Compassionate Leave sub-options
+    if (val === "Compassionate Leave") {
+      compassionateGroup.classList.add("visible");
+      endDateEl.disabled = true;
+      endDateEl.required = false;
+      totalDaysEl.value  = "";
+      daysDisplay.textContent = "Select family relation to set leave days.";
+      daysDisplay.style.color = "#888";
+    } else {
+      compassionateGroup.classList.remove("visible");
+      document.querySelectorAll('input[name="compassionateType"]').forEach(r => r.checked = false);
+    }
+
+    // Fixed-duration leave types (Maternity / Paternity)
+    const e = ENTITLEMENTS[val];
+    if (e && e.type === "fixed") {
+      applyFixedLeave(val);
+    } else if (val !== "Compassionate Leave" && !halfDayEl.checked) {
+      resetToFreeDate();
+    }
+
+    // Supporting document upload — hidden for Annual Leave only
+    const uploadGrp = document.getElementById("uploadGroup");
+    if (val && val !== "Annual Leave") {
+      uploadGrp.style.display = "";
+    } else {
+      uploadGrp.style.display = "none";
+      document.getElementById("supportingDoc").value = "";
+      document.getElementById("uploadStatus").textContent = "";
+      document.getElementById("uploadStatus").className = "";
+      document.getElementById("uploadArea").classList.remove("error-border");
+    }
+  });
+
+  // Half Day logic
+  halfDayEl.addEventListener("change", function () {
+    if (this.checked) {
+      sessionGroup.classList.add("visible");
+      // Disable end date and lock it to the start date
+      endDateEl.disabled = true;
+      endDateEl.required = false;
+      if (startDateEl.value) {
+        endDateEl.value = startDateEl.value;
+      }
+      totalDaysEl.value = "0.5";
+      daysDisplay.textContent = "0.5 working day (half day)";
+      daysDisplay.style.color = "#1a73e8";
+    } else {
+      sessionGroup.classList.remove("visible");
+      document.querySelectorAll('input[name="session"]').forEach(r => r.checked = false);
+      endDateEl.disabled = false;
+      endDateEl.required = true;
+      updateDays();
+    }
+  });
+
+  // Compassionate Leave — auto-set days and end date based on family type
+  document.querySelectorAll('input[name="compassionateType"]').forEach(radio => {
+    radio.addEventListener("change", function () {
+      const days = this.value === "Immediate Family" ? 2 : 1;
+      totalDaysEl.value = days;
+      daysDisplay.textContent = `${days} day${days > 1 ? "s" : ""} (${this.value})`;
+      daysDisplay.style.color = "#1a73e8";
+
+      // Auto-set end date based on start date + days (skip weekends)
+      if (startDateEl.value) {
+        const start = new Date(startDateEl.value);
+        let counted = 1;
+        const cur   = new Date(start);
+        while (counted < days) {
+          cur.setDate(cur.getDate() + 1);
+          const d = cur.getDay();
+          if (d !== 0 && d !== 6) counted++;
+        }
+        endDateEl.value = cur.toISOString().split("T")[0];
+      }
+    });
+  });
+
+  // Auto-calculate working days when dates change
+  const startDateEl = document.getElementById("startDate");
+  const endDateEl   = document.getElementById("endDate");
+  const totalDaysEl = document.getElementById("totalDays");
+  const daysDisplay = document.getElementById("daysDisplay");
+
+  function countWorkingDays(start, end) {
+    let count = 0;
+    const cur = new Date(start);
+    while (cur <= end) {
+      const day = cur.getDay();
+      if (day !== 0 && day !== 6) count++;
+      cur.setDate(cur.getDate() + 1);
+    }
+    return count;
+  }
+
+  function updateDays() {
+    if (halfDayEl.checked) return;
+    const s = startDateEl.value;
+    const e = endDateEl.value;
+    if (!s || !e) { totalDaysEl.value = ""; daysDisplay.textContent = ""; return; }
+    const start = new Date(s);
+    const end   = new Date(e);
+    if (end < start) {
+      daysDisplay.textContent = "End date must be after start date.";
+      daysDisplay.style.color = "#e53935";
+      totalDaysEl.value = "";
+      return;
+    }
+    const days = countWorkingDays(start, end);
+    totalDaysEl.value = days;
+
+    const ent = getEffectiveEntitlement(leaveTypeEl.value);
+    if (ent && ent.type === "capped" && days > ent.days) {
+      daysDisplay.textContent = `${days} days — exceeds entitlement of ${ent.days} days!`;
+      daysDisplay.style.color = "#e53935";
+      entitlementNote.textContent = `Entitlement: ${ent.days} ${ent.unit} maximum — over by ${days - ent.days}`;
+      entitlementNote.className = "warn";
+    } else {
+      daysDisplay.textContent = `${days} working day${days !== 1 ? "s" : ""}`;
+      daysDisplay.style.color = "#1a73e8";
+      setEntitlementNote(leaveTypeEl.value);
+    }
+  }
+
+  // Set minimum date to today
+  const today = new Date().toISOString().split("T")[0];
+  startDateEl.min = today;
+  endDateEl.min   = today;
+
+  startDateEl.addEventListener("change", () => {
+    if (halfDayEl.checked) {
+      endDateEl.value = startDateEl.value;
+      return;
+    }
+    const e = ENTITLEMENTS[leaveTypeEl.value];
+    if (e && e.type === "fixed") {
+      applyFixedLeave(leaveTypeEl.value);
+      return;
+    }
+    // Reapply compassionate end date if a family type is already selected
+    const compSel = document.querySelector('input[name="compassionateType"]:checked');
+    if (compSel) {
+      compSel.dispatchEvent(new Event("change"));
+      return;
+    }
+    if (endDateEl.value && endDateEl.value < startDateEl.value) {
+      endDateEl.value = startDateEl.value;
+    }
+    endDateEl.min = startDateEl.value;
+    updateDays();
+  });
+  endDateEl.addEventListener("change", updateDays);
+
+  // Toast helper
+  function showToast(message, type) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.className   = type;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, 5000);
+  }
+
+  // Upload helpers
+  const uploadStatus = document.getElementById("uploadStatus");
+  const uploadArea   = document.getElementById("uploadArea");
+
+  document.getElementById("supportingDoc").addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) { uploadStatus.textContent = ""; uploadStatus.className = ""; return; }
+    if (file.type !== "application/pdf") {
+      uploadStatus.textContent = "Invalid file type. Please upload a PDF.";
+      uploadStatus.className   = "error";
+      this.value = "";
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      uploadStatus.textContent = "File exceeds 10 MB. Please upload a smaller file.";
+      uploadStatus.className   = "error";
+      this.value = "";
+      return;
+    }
+    uploadStatus.textContent = "✓ " + file.name + " (" + (file.size / 1024 / 1024).toFixed(2) + " MB)";
+    uploadStatus.className   = "success";
+    uploadArea.classList.remove("error-border");
+  });
+
+  function readFileAsBase64(file) {
+    return new Promise(function (resolve, reject) {
+      const reader = new FileReader();
+      reader.onload  = function (ev) { resolve(ev.target.result.split(",")[1]); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function closeModal() {
+    document.getElementById("printModal").classList.remove("visible");
+  }
+
+  function buildPrintSlip(payload, appId, appDocUrl, suppDocUrl) {
+    function row(label, value) {
+      if (!value) return "";
+      return '<div class="slip-row"><span class="slip-label">' + label + '</span><span class="slip-value">' + value + '</span></div>';
+    }
+    function rowLink(label, url, text) {
+      if (!url) return "";
+      return '<div class="slip-row"><span class="slip-label">' + label + '</span><span class="slip-value"><a href="' + url + '" target="_blank">' + text + '</a></span></div>';
+    }
+    const halfDayInfo = payload.halfDay === "Yes" ? "Yes – " + payload.session : "";
+    const dateStr = new Date().toLocaleDateString("en-MY", { day: "2-digit", month: "long", year: "numeric" });
+
+    return (
+      '<div class="slip-header">' +
+        '<h2>Leave Application Request</h2>' +
+        '<p>Ref No: <strong>' + appId + '</strong> &nbsp;|&nbsp; Submitted: ' + dateStr + '</p>' +
+      '</div>' +
+      '<div class="slip-section">' +
+        '<div class="slip-section-title">Employee Information</div>' +
+        row("Name",        payload.employeeName) +
+        row("Staff ID",    payload.employeeId) +
+        row("Department",  payload.department) +
+        row("Position",    payload.position) +
+        row("Email",       payload.email) +
+        row("Phone",       payload.phone) +
+      '</div>' +
+      '<div class="slip-section">' +
+        '<div class="slip-section-title">Leave Details</div>' +
+        row("Leave Type",   payload.leaveType) +
+        (payload.compassionateType ? row("Family Relation", payload.compassionateType) : "") +
+        (halfDayInfo              ? row("Half Day",         halfDayInfo)              : "") +
+        row("Start Date",   payload.startDate) +
+        row("End Date",     payload.endDate) +
+        row("Total Days",   payload.totalDays + " working day(s)") +
+        row("Reason",       payload.reason) +
+      '</div>' +
+      '<div class="slip-section">' +
+        '<div class="slip-section-title">Documents (Google Drive)</div>' +
+        rowLink("Application", appDocUrl,  "View Application PDF") +
+        (suppDocUrl ? rowLink("Supporting Doc", suppDocUrl, "View Supporting Document") : "") +
+      '</div>' +
+      '<div class="slip-status">Status: Pending Approval</div>' +
+      '<div class="slip-signatures">' +
+        '<div class="sig-box">' +
+          '<div style="font-size:0.78rem;margin-bottom:3px;color:#555;">Applicant Name:</div>' +
+          '<div class="sig-filled">' + payload.employeeName + '</div>' +
+          '<div style="font-size:0.78rem;margin-bottom:3px;margin-top:8px;color:#555;">Date Applied:</div>' +
+          '<div class="sig-filled">' + dateStr + '</div>' +
+        '</div>' +
+        '<div class="sig-box">' +
+          '<div style="font-size:0.78rem;margin-bottom:3px;color:#555;">Approved by:</div>' +
+          '<div class="sig-filled">' + (payload.managerName || '') + '</div>' +
+          '<div style="font-size:0.78rem;margin-bottom:3px;margin-top:8px;color:#555;">Date Approved:</div>' +
+          '<div class="sig-line"></div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  // Form submit
+  document.getElementById("leaveForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    // Basic validation
+    const isHalfDay = halfDayEl.checked;
+    const requiredFields = ["employeeName","employeeId","department","position",
+                            "email","phone","leaveType","startDate","reason"];
+    if (!isHalfDay) requiredFields.push("endDate");
+
+    let valid = true;
+    for (const id of requiredFields) {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.style.borderColor = "#e53935";
+        valid = false;
+      } else {
+        el.style.borderColor = "";
+      }
+    }
+
+    // Validate "Other" text box if visible
+    if (leaveTypeEl.value === "Other" && !otherLeaveInput.value.trim()) {
+      otherLeaveInput.style.borderColor = "#e53935";
+      valid = false;
+    }
+
+    // Validate Compassionate Leave family type
+    const compassionateVal = document.querySelector('input[name="compassionateType"]:checked');
+    if (leaveTypeEl.value === "Compassionate Leave" && !compassionateVal) {
+      showToast("Please select a family relation for Compassionate Leave.", "error");
+      return;
+    }
+
+    const sessionVal = document.querySelector('input[name="session"]:checked');
+
+    // Block if balance is zero
+    if (remainingBalanceEl.className === "none" && remainingBalanceEl.textContent.startsWith("No remaining")) {
+      showToast(remainingBalanceEl.textContent, "error");
+      return;
+    }
+
+    // Entitlement cap check
+    const ent = getEffectiveEntitlement(leaveTypeEl.value);
+    if (ent && ent.type === "capped" && Number(totalDaysEl.value) > ent.days) {
+      showToast(`${leaveTypeEl.value} entitlement is ${ent.days} days. Please reduce the leave period.`, "error");
+      return;
+    }
+
+    // Date cross-check (full day only)
+    if (!isHalfDay && endDateEl.value < startDateEl.value) {
+      endDateEl.style.borderColor = "#e53935";
+      showToast("End date cannot be before the start date.", "error");
+      return;
+    }
+
+    if (!valid) {
+      showToast("Please fill in all required fields.", "error");
+      return;
+    }
+
+    // Validate supporting document (required for all leave types except Annual Leave)
+    const fileInput   = document.getElementById("supportingDoc");
+    const docRequired = leaveTypeEl.value && leaveTypeEl.value !== "Annual Leave";
+    if (docRequired && (!fileInput.files || !fileInput.files[0])) {
+      showToast("Please upload a supporting document.", "error");
+      uploadArea.classList.add("error-border");
+      return;
+    }
+
+    // Check script URL is configured
+    if (SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
+      showToast("Google Apps Script URL not configured yet. See setup instructions.", "error");
+      return;
+    }
+
+    const btn  = document.getElementById("submitBtn");
+    const form = this;
+    btn.disabled  = true;
+    btn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+    const payload = {
+      employeeName:      document.getElementById("employeeName").value.trim(),
+      employeeId:        document.getElementById("employeeId").value.trim(),
+      department:        document.getElementById("department").value,
+      position:          document.getElementById("position").value.trim(),
+      email:             document.getElementById("email").value.trim(),
+      phone:             document.getElementById("phone").value.trim(),
+      leaveType:         leaveTypeEl.value === "Other"
+                           ? otherLeaveInput.value.trim()
+                           : leaveTypeEl.value,
+      compassionateType: compassionateVal ? compassionateVal.value : "",
+      halfDay:           isHalfDay ? "Yes" : "No",
+      session:           isHalfDay && sessionVal ? sessionVal.value : "",
+      startDate:         startDateEl.value,
+      endDate:           endDateEl.value,
+      totalDays:         totalDaysEl.value,
+      reason:            document.getElementById("reason").value.trim(),
+      managerName:       currentManagerName,
+    };
+
+    // Encode supporting document as base64 if provided
+    if (fileInput.files && fileInput.files[0]) {
+      btn.innerHTML  = '<span class="spinner"></span> Uploading...';
+      payload.fileBase64 = await readFileAsBase64(fileInput.files[0]);
+    }
+
+    try {
+      const resp   = await fetch(SCRIPT_URL, {
+        method:  "POST",
+        headers: { "Content-Type": "text/plain" },
+        body:    JSON.stringify(payload),
+      });
+      const result = await resp.json();
+
+      if (result.status !== "success") {
+        showToast("Submission failed: " + (result.message || "Unknown error."), "error");
+        return;
+      }
+
+      showToast("Leave application submitted successfully!", "success");
+
+      // Populate and show modal
+      document.getElementById("printSlip").innerHTML =
+        buildPrintSlip(payload, result.appId || "—", result.appDocUrl || "", result.suppDocUrl || "");
+      document.getElementById("printModal").classList.add("visible");
+
+      document.getElementById("closeModalBtn").onclick = function () {
+        closeModal();
+        form.reset();
+        totalDaysEl.value       = "";
+        daysDisplay.textContent = "";
+        document.getElementById("uploadGroup").style.display = "none";
+        uploadStatus.textContent = "";
+        uploadStatus.className   = "";
+        uploadArea.classList.remove("error-border");
+      };
+
+    } catch (err) {
+      showToast("Submission failed. Please check your internet connection.", "error");
+    } finally {
+      btn.disabled  = false;
+      btn.innerHTML = "Submit";
+    }
+  });
+</script>
+</body>
+</html>

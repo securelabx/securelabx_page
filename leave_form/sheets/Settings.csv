@@ -1,0 +1,4 @@
+Setting,Value,Description
+HR Email,hr@company.com,Email address of the HR person who receives leave notifications
+HR Name,Puan Rohani,Name of the HR person (used in email greeting)
+Company Name,SLX Corporation,Company name shown in email subjects

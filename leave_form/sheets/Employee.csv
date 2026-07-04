@@ -1,0 +1,7 @@
+Staff ID,Employee Name,Department,Position,Email,Phone,Manager Name,Manager Email,Internship Duration
+SLX-001,Ahmad Faris,Human Resources,HR Manager,ahmad.faris@company.com,011-1234567,Dato Sri Kamal,kamal@company.com,
+SLX-002,Nurul Ain,Finance,Finance Executive,nurul.ain@company.com,011-2345678,Dato Sri Kamal,kamal@company.com,
+SLX-003,Haziq Zulkifli,IT,Software Developer,haziq@company.com,011-3456789,Ahmad Faris,ahmad.faris@company.com,
+SLX-004,Siti Hajar,Marketing,Marketing Executive,siti.hajar@company.com,011-4567890,Ahmad Faris,ahmad.faris@company.com,
+SLX-005,Amirul Hakim,IT,Intern,amirul.hakim@company.com,011-5678901,Haziq Zulkifli,haziq@company.com,3
+SLX-006,Dato Sri Kamal,Management,Chief Executive Officer,kamal@company.com,011-9999888,,
