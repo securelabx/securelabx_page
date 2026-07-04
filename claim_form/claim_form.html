@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SLX Staff Claim System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --navy:      #1b3560;
+      --navy-dark: #122444;
+      --navy-light:#2a4a7f;
+      --accent:    #2563eb;
+      --gold:      #f59e0b;
+      --success:   #16a34a;
+      --danger:    #dc2626;
+      --bg:        #f0f4f8;
+      --card:      #ffffff;
+      --border:    #dde3ed;
+      --text:      #1e293b;
+      --muted:     #64748b;
+      --input-bg:  #f8fafc;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      min-height: 100vh;
+      padding: 28px 16px 48px;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page {
+      max-width: 1200px;
+      margin: auto;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(15,30,60,.13);
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--navy-light) 100%);
+      padding: 28px 32px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-logo {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: #fff; font-weight: 900;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,.25);
+    }
+    .header-text h1 {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .4px;
+    }
+    .header-text p {
+      color: rgba(255,255,255,.75);
+      font-size: 12px;
+      margin-top: 3px;
+      letter-spacing: .3px;
+    }
+    .header-badge {
+      margin-left: auto;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      color: rgba(255,255,255,.9);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+
+    /* ── SECTION ── */
+    .section-wrap { padding: 24px 28px; border-bottom: 1px solid var(--border); }
+    .section-wrap:last-of-type { border-bottom: none; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .section-title .icon {
+      width: 32px; height: 32px;
+      background: var(--navy);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 15px;
+      flex-shrink: 0;
+    }
+    .section-title h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .section-title .line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── GRID ── */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-size: 13.5px;
+      background: var(--input-bg);
+      color: var(--text);
+      transition: border-color .15s, box-shadow .15s;
+      width: 100%;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+      background: #fff;
+    }
+    .field input[readonly] { background: #f1f5fb; color: var(--muted); cursor: default; }
+
+    .staff-id-wrap { position: relative; }
+    .staff-id-wrap input { padding-right: 36px; }
+    .staff-status {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 4px;
+      min-height: 18px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+
+    thead tr th {
+      background: var(--navy);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      padding: 11px 8px;
+      border-right: 1px solid rgba(255,255,255,.1);
+      letter-spacing: .3px;
+      white-space: nowrap;
+    }
+    thead tr th:last-child { border-right: none; }
+
+    tbody tr { transition: background .1s; }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    tbody tr:hover { background: #eff6ff; }
+
+    tbody td {
+      border: 1px solid var(--border);
+      padding: 6px;
+      vertical-align: top;
+    }
+    .bil-cell {
+      text-align: center;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--navy);
+      padding-top: 12px !important;
+      vertical-align: middle !important;
+    }
+
+    tbody td input[type="text"],
+    tbody td input[type="date"],
+    tbody td input[type="number"],
+    tbody td select,
+    tbody td textarea {
+      width: 100%;
+      padding: 7px 8px;
+      border: 1.5px solid transparent;
+      border-radius: 5px;
+      font-size: 13px;
+      background: transparent;
+      color: var(--text);
+      transition: border-color .15s, background .15s;
+    }
+    tbody td input:focus,
+    tbody td select:focus,
+    tbody td textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 2px rgba(37,99,235,.1);
+    }
+    tbody td textarea { min-height: 36px; resize: vertical; }
+
+    /* Mileage sub-panel */
+    .mileage-box {
+      display: none;
+      background: #eef3fb;
+      border: 1px solid #c3d4f0;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 6px;
+    }
+    .mileage-box label { font-size: 11px; font-weight: 600; color: var(--muted); margin: 6px 0 3px; display: block; }
+    .mileage-box input { background: #fff; border: 1px solid #c3d4f0; border-radius: 4px; padding: 6px 8px; font-size: 12px; width: 100%; }
+
+    /* Document note */
+    .doc-note {
+      background: #fffbeb;
+      border-left: 3px solid var(--gold);
+      border-radius: 4px;
+      padding: 7px 9px;
+      font-size: 12px;
+      color: #78350f;
+      line-height: 1.4;
+    }
+
+    /* Delete row button */
+    .del-btn {
+      background: none;
+      border: none;
+      color: #dc2626;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px 8px;
+      border-radius: 5px;
+      width: 100%;
+      transition: background .15s;
+    }
+    .del-btn:hover { background: #fee2e2; }
+
+    /* ── TOTAL BAR ── */
+    .total-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--navy-dark);
+      color: #fff;
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin-top: 16px;
+    }
+    .total-bar .label { font-size: 13px; font-weight: 600; opacity: .8; }
+    .total-bar .amount { font-size: 22px; font-weight: 800; color: #fbbf24; }
+
+    /* ── BUTTONS ── */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 20px;
+      border: none;
+      border-radius: 7px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter .15s, transform .1s;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn:active { transform: scale(.97); }
+    .btn-add {
+      background: #e8f0fe;
+      color: var(--accent);
+      border: 1.5px solid #bfcffd;
+      width: 100%;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .btn-submit {
+      background: var(--navy);
+      color: #fff;
+      flex: 1;
+      justify-content: center;
+    }
+    .btn-reset {
+      background: #fee2e2;
+      color: var(--danger);
+      border: 1.5px solid #fecaca;
+      justify-content: center;
+      padding: 11px 18px;
+    }
+
+    /* ── STATUS MESSAGE ── */
+    #statusMsg {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      align-items: center;
+      gap: 10px;
+    }
+    #statusMsg.show { display: flex; }
+    #statusMsg.success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    #statusMsg.error   { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    #statusMsg.loading { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      padding: 12px 28px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+      .header { flex-wrap: wrap; }
+      .header-badge { margin-left: 0; }
+      body { padding: 12px 8px 32px; }
+    }
+    @media (max-width: 540px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: none; padding: 0; }
+      .page { box-shadow: none; border-radius: 0; }
+      .btn, .action-row, .btn-add { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+<div class="header-text">
+      <h1>SECURE LABX SDN. BHD.</h1>
+      <p>BORANG TUNTUTAN BAYARAN BALIK WANG &nbsp;/&nbsp; STAFF CLAIM FORM</p>
+    </div>
+    <div class="header-badge">FIN-007-F01</div>
+  </div>
+
+  <!-- APPLICANT INFO -->
+  <div class="section-wrap">
+    <div class="section-title">
+      <div class="icon"><i class="fa-solid fa-user"></i></div>
+      <h2>Maklumat Pemohon</h2>
+      <div class="line"></div>
+    </div>
+    <div class="grid">
+      <div class="field">
+        <label>Tarikh Permohonan</label>
+        <input type="date" id="tarikhPermohonan" />
+      </div>
+      <div class="field">
+        <label>Staff ID</label>
+        <div class="staff-id-wrap">
+          <input type="text" id="staffId" placeholder="Cth: SLX-001"
+            onblur="lookupStaff()"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();lookupStaff();}" />
+        </div>
+        <div class="staff-status" id="staffLookupStatus"></div>
+      </div>
+      <div class="field">
+        <label>Nama Staff</label>
+        <input type="text" id="nama" />
+      </div>
+      <div class="field">
+        <label>Jabatan</label>
+        <input type="text" id="jabatan" />
+      </div>
+      <div class="field">
+        <label>Jawatan</label>
+        <input type="text" id="jawatan" />
+      </div>
+      <div class="field">
+        <label>Email Staff</label>
+        <input type="email" id="email" />
+      </div>
+    </div>
+  </div>
+
+  <!-- CLAIM TABLE -->
+  <div class="section-wrap">
+    <div class="section-title">
+      <div class="icon"><i class="fa-solid fa-clipboard-list"></i></div>
+      <h2>Maklumat Tuntutan</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="table-wrap">
+      <table id="claimTable">
+        <thead>
+          <tr>
+            <th style="width:44px">Bil</th>
+            <th style="width:120px">Tarikh</th>
+            <th style="width:190px">Jenis Claim</th>
+            <th>Keterangan</th>
+            <th style="width:115px">No Resit</th>
+            <th style="width:210px">Dokumen Wajib</th>
+            <th style="width:140px">Upload</th>
+            <th style="width:105px">Jumlah (RM)</th>
+            <th style="width:52px"></th>
+          </tr>
+        </thead>
+        <tbody id="claimBody"></tbody>
+      </table>
+    </div>
+
+    <button class="btn btn-add" onclick="addRow()">&#43; Tambah Baris Claim</button>
+
+    <div class="total-bar">
+      <span class="label">JUMLAH TUNTUTAN</span>
+      <span class="amount">RM <span id="grandTotal">0.00</span></span>
+    </div>
+
+    <div class="action-row">
+      <button class="btn btn-submit" onclick="submitClaim()">
+        &#128228; Submit Claim
+      </button>
+      <button class="btn btn-reset" onclick="resetForm()">
+        &#8635; Reset
+      </button>
+    </div>
+
+    <div id="statusMsg"></div>
+  </div>
+
+  <!-- STATUS CHECK / RESUBMIT -->
+  <div class="section-wrap" id="statusSection">
+    <div class="section-title">
+      <div class="icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+      <h2>Semak Status & Kemukakan Semula</h2>
+      <div class="line"></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+      <div class="field" style="flex:1;min-width:200px;">
+        <label>No Claim</label>
+        <input type="text" id="checkNo" placeholder="Cth: CLM-2601-0001"
+          onkeydown="if(event.key==='Enter')checkClaimStatus()" style="text-transform:uppercase" />
+      </div>
+      <button class="btn btn-submit" style="padding:9px 18px;white-space:nowrap;margin-bottom:5px" onclick="checkClaimStatus()">
+        <i class="fa-solid fa-magnifying-glass"></i> Semak Status
+      </button>
+    </div>
+    <div id="statusResult" style="margin-top:14px;display:none;"></div>
+  </div>
+
+  <div class="footer">
+    &copy; Secure Labx Sdn. Bhd. &nbsp;|&nbsp; Sistem Tuntutan Kakitangan &nbsp;|&nbsp; Semua maklumat adalah SULIT
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoTtVdUZMeXbtLgf_WeiGejsieRRxPZzPXi2aCUdz3ynxv2Xs1dBuNKZ_5vj1mWH8R/exec';
+
+const dokumenMap = {
+  'Mileage':            'Screenshot Google Maps / bukti perjalanan / arahan kerja / bukti lawatan site.',
+  'Tol / Parking':      'Resit tol / resit parking.',
+  'Pembelian Barang':   'Resit pembelian / invoice / quotation jika ada.',
+  'Makan / Refreshment':'Resit pembelian / senarai nama peserta jika berkaitan.',
+  'Training / Kursus':  'Invoice / resit bayaran / sijil / surat jemputan.',
+  'Lain-lain':          'Dokumen sokongan berkaitan.'
+};
+
+document.getElementById('tarikhPermohonan').valueAsDate = new Date();
+
+/* ── STAFF LOOKUP ── */
+async function lookupStaff() {
+  const staffId = document.getElementById('staffId').value.trim();
+  const statusEl = document.getElementById('staffLookupStatus');
+  if (!staffId) return;
+
+  statusEl.style.color = '#64748b';
+  statusEl.innerHTML = '<span class="spinner"></span> Mencari...';
+
+  try {
+    const res  = await fetch(`${SCRIPT_URL}?action=getStaff&staffId=${encodeURIComponent(staffId)}`);
+    const json = await res.json();
+    if (json.success) {
+      document.getElementById('nama').value    = json.nama    || '';
+      document.getElementById('jabatan').value = json.jabatan || '';
+      document.getElementById('jawatan').value = json.jawatan || '';
+      document.getElementById('email').value   = json.email   || '';
+      statusEl.style.color = '#16a34a';
+      statusEl.innerHTML = '&#10003; Maklumat staff dijumpai.';
+    } else {
+      statusEl.style.color = '#dc2626';
+      statusEl.innerHTML = '&#10007; ' + (json.error || 'Staff ID tidak dijumpai.');
+    }
+  } catch {
+    statusEl.style.color = '#dc2626';
+    statusEl.innerHTML = '&#10007; Gagal sambung ke server.';
+  }
+}
+
+/* ── ADD ROW ── */
+function addRow() {
+  const tbody = document.getElementById('claimBody');
+  const rowNo = tbody.rows.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="bil-cell">${rowNo}</td>
+    <td><input type="date" class="tarikh" /></td>
+    <td>
+      <select class="kategori" onchange="kategoriChange(this)">
+        <option value="">-- Pilih --</option>
+        <option>Mileage</option>
+        <option>Tol / Parking</option>
+        <option>Pembelian Barang</option>
+        <option>Makan / Refreshment</option>
+        <option>Training / Kursus</option>
+        <option>Lain-lain</option>
+      </select>
+      <div class="mileage-box">
+        <label>Dari</label><input type="text" class="dari" placeholder="Cth: Office JB" />
+        <label>Ke</label><input type="text" class="ke" placeholder="Cth: Site Client" />
+        <label>Tujuan Perjalanan</label><input type="text" class="tujuan" placeholder="Cth: Lawatan site" />
+        <label>Jarak KM</label><input type="number" class="km" oninput="calcMileage(this)" placeholder="Cth: 25" />
+        <label>Kadar</label><input type="text" value="RM1.00/KM (lebih 20KM)" readonly />
+      </div>
+    </td>
+    <td><textarea class="keterangan" rows="2"></textarea></td>
+    <td><input type="text" class="noResit" /></td>
+    <td><div class="doc-note dokumenText">Sila pilih jenis claim.</div></td>
+    <td><input type="file" class="files" multiple /></td>
+    <td><input type="number" class="jumlah" value="0.00" min="0" step="0.01" oninput="calcTotal()" /></td>
+    <td style="text-align:center;vertical-align:middle">
+      <button class="del-btn" onclick="deleteRow(this)" title="Padam baris">&#128465;</button>
+    </td>`;
+  tbody.appendChild(tr);
+}
+
+/* ── DELETE ROW ── */
+function deleteRow(btn) {
+  const tbody = document.getElementById('claimBody');
+  if (tbody.rows.length <= 1) return;
+  btn.closest('tr').remove();
+  [...tbody.rows].forEach((r, i) => r.cells[0].textContent = i + 1);
+  calcTotal();
+}
+
+/* ── KATEGORI CHANGE ── */
+function kategoriChange(sel) {
+  const row     = sel.closest('tr');
+  const kategori = sel.value;
+  row.querySelector('.dokumenText').innerText = dokumenMap[kategori] || 'Sila pilih jenis claim.';
+  const mileage = row.querySelector('.mileage-box');
+  const jumlah  = row.querySelector('.jumlah');
+  if (kategori === 'Mileage') {
+    mileage.style.display = 'block';
+    jumlah.readOnly = true;
+    jumlah.value = '0.00';
+  } else {
+    mileage.style.display = 'none';
+    jumlah.readOnly = false;
+    jumlah.value = '0.00';
+  }
+  calcTotal();
+}
+
+/* ── MILEAGE CALC ── */
+function calcMileage(input) {
+  const km = Number(input.value || 0);
+  input.closest('tr').querySelector('.jumlah').value = km > 20 ? (km * 1).toFixed(2) : '0.00';
+  calcTotal();
+}
+
+/* ── TOTAL ── */
+function calcTotal() {
+  let total = 0;
+  document.querySelectorAll('.jumlah').forEach(x => total += Number(x.value || 0));
+  document.getElementById('grandTotal').innerText = total.toFixed(2);
+}
+
+/* ── FILE → BASE64 ── */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = () => resolve({ name: file.name, type: file.type, data: reader.result.split(',')[1] });
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ── SET STATUS ── */
+function setStatus(type, html) {
+  const el = document.getElementById('statusMsg');
+  el.className = 'show ' + type;
+  el.innerHTML = html;
+}
+
+/* ── SUBMIT ── */
+async function submitClaim() {
+  setStatus('loading', '<span class="spinner"></span> Sedang menghantar claim...');
+
+  const items = [];
+  for (const row of document.querySelectorAll('#claimBody tr')) {
+    const files = [];
+    for (const file of row.querySelector('.files').files) {
+      files.push(await fileToBase64(file));
+    }
+    const kategori = row.querySelector('.kategori').value;
+    items.push({
+      tarikh:           row.querySelector('.tarikh').value,
+      kategori,
+      keterangan:       row.querySelector('.keterangan').value,
+      noResit:          row.querySelector('.noResit').value,
+      dokumenDiperlukan:row.querySelector('.dokumenText').innerText,
+      jumlah:           row.querySelector('.jumlah').value,
+      dari:             row.querySelector('.dari')?.value   || '',
+      ke:               row.querySelector('.ke')?.value     || '',
+      tujuan:           row.querySelector('.tujuan')?.value || '',
+      km:               row.querySelector('.km')?.value     || '',
+      kadarKm:          kategori === 'Mileage' ? 'RM1.00/KM untuk lebih 20KM' : '',
+      files
+    });
+  }
+
+  const payload = {
+    tarikhPermohonan: document.getElementById('tarikhPermohonan').value,
+    staffId:  document.getElementById('staffId').value,
+    nama:     document.getElementById('nama').value,
+    jabatan:  document.getElementById('jabatan').value,
+    jawatan:  document.getElementById('jawatan').value,
+    email:    document.getElementById('email').value,
+    totalClaim: document.getElementById('grandTotal').innerText,
+    items
+  };
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    setStatus('success', '&#10003; Claim berjaya dihantar! Sila semak Google Sheet untuk pengesahan.');
+  } catch (err) {
+    setStatus('error', '&#10007; Ralat: ' + err.message);
+  }
+}
+
+/* ── RESET ── */
+function resetForm() {
+  if (!confirm('Reset semua data? Tindakan ini tidak boleh dibatalkan.')) return;
+  ['staffId','nama','jabatan','jawatan','email'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('tarikhPermohonan').valueAsDate = new Date();
+  document.getElementById('staffLookupStatus').innerHTML = '';
+  document.getElementById('claimBody').innerHTML = '';
+  addRow();
+  document.getElementById('grandTotal').innerText = '0.00';
+  const s = document.getElementById('statusMsg');
+  s.className = '';
+  s.innerHTML = '';
+}
+
+addRow();
+
+/* ── STATUS CHECK ── */
+let _resubmitClaim = null;
+
+async function checkClaimStatus() {
+  const no = document.getElementById('checkNo').value.trim().toUpperCase();
+  const resultDiv = document.getElementById('statusResult');
+  resultDiv.style.display = 'block';
+  if (!no) {
+    resultDiv.innerHTML = '<div style="color:#dc2626;font-weight:600"><i class="fa-solid fa-circle-xmark"></i> Sila masukkan No Claim.</div>';
+    return;
+  }
+  resultDiv.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:#1e40af"><span class="spinner"></span> Memeriksa status...</div>';
+  try {
+    const d = await (await fetch(`${SCRIPT_URL}?action=getClaimDetails&noClaim=${encodeURIComponent(no)}`)).json();
+    if (!d.success) throw new Error(d.error || 'Claim tidak dijumpai.');
+    _resubmitClaim = d.claim;
+    renderStatusResult(d.claim);
+  } catch(e) {
+    resultDiv.innerHTML = `<div style="background:#fee2e2;border:1px solid #fecaca;border-radius:8px;padding:14px;color:#991b1b;font-weight:600"><i class="fa-solid fa-circle-xmark"></i> ${e.message}</div>`;
+  }
+}
+
+function renderStatusResult(c) {
+  const resultDiv = document.getElementById('statusResult');
+  const canResubmit = c.statusAdmin === 'Dokumen Tidak Lengkap / Dikembalikan' || c.keputusanOM === 'Tolak';
+  let label, bg, border, color, icon;
+  if (c.keputusanOM === 'Lulus') {
+    label = 'LULUS'; bg = '#dcfce7'; border = '#bbf7d0'; color = '#166534'; icon = 'fa-circle-check';
+  } else if (c.keputusanOM === 'Tolak') {
+    label = 'DITOLAK oleh OM'; bg = '#fee2e2'; border = '#fecaca'; color = '#991b1b'; icon = 'fa-circle-xmark';
+  } else if (c.statusAdmin === 'Dokumen Tidak Lengkap / Dikembalikan') {
+    label = 'Dikembalikan – Dokumen Tidak Lengkap'; bg = '#fff7ed'; border = '#fed7aa'; color = '#9a3412'; icon = 'fa-rotate-left';
+  } else if (c.statusAdmin === 'Pending OM Approval') {
+    label = 'Dalam Semakan Operations Manager'; bg = '#dbeafe'; border = '#bfdbfe'; color = '#1e40af'; icon = 'fa-paper-plane';
+  } else {
+    label = 'Pending Semakan Admin'; bg = '#fef3c7'; border = '#fde68a'; color = '#92400e'; icon = 'fa-hourglass-half';
+  }
+  const notes = [];
+  if (c.catatanAdmin) notes.push(`<div><div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase">Catatan Admin</div><div style="margin-top:2px">${c.catatanAdmin}</div></div>`);
+  if (c.catatanOM)    notes.push(`<div><div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase">Catatan OM</div><div style="margin-top:2px">${c.catatanOM}</div></div>`);
+  resultDiv.innerHTML = `
+    <div style="background:${bg};border:1.5px solid ${border};border-radius:10px;padding:16px 18px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <i class="fa-solid ${icon}" style="font-size:24px;color:${color}"></i>
+        <div>
+          <div style="font-size:15px;font-weight:800;color:${color}">${label}</div>
+          <div style="font-size:12px;color:#64748b;margin-top:3px">
+            <strong>${c.noClaim}</strong> &nbsp;·&nbsp; ${c.nama} &nbsp;·&nbsp; RM ${c.jumlah} &nbsp;·&nbsp; ${c.tarikhPermohonan}
+          </div>
+        </div>
+      </div>
+      ${notes.length ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;padding-top:10px;border-top:1px solid ${border}">${notes.join('')}</div>` : ''}
+      ${canResubmit ? `<button class="btn btn-submit" style="margin-top:14px" onclick="doResubmit()"><i class="fa-solid fa-rotate-right"></i> Kemukakan Semula Tuntutan</button>` : ''}
+    </div>`;
+}
+
+function doResubmit() {
+  const c = _resubmitClaim;
+  if (!c) return;
+  document.getElementById('staffId').value  = c.staffId  || '';
+  document.getElementById('nama').value     = c.nama     || '';
+  document.getElementById('jabatan').value  = c.jabatan  || '';
+  document.getElementById('jawatan').value  = c.jawatan  || '';
+  document.getElementById('email').value    = c.email    || '';
+  document.getElementById('tarikhPermohonan').valueAsDate = new Date();
+  document.getElementById('claimBody').innerHTML = '';
+  (c.items || []).forEach(function(item) {
+    addRow();
+    const rows = document.getElementById('claimBody').rows;
+    const tr = rows[rows.length - 1];
+    const t = tr.querySelector('.tarikh');
+    if (t && item.tarikh) {
+      const p = item.tarikh.split('/');
+      if (p.length === 3) t.value = p[2] + '-' + p[1] + '-' + p[0];
+    }
+    const k = tr.querySelector('.kategori');
+    if (k) { k.value = item.kategori || ''; kategoriChange(k); }
+    const ket = tr.querySelector('.keterangan');
+    if (ket) ket.value = item.keterangan || '';
+    const resit = tr.querySelector('.noResit');
+    if (resit) resit.value = item.noResit || '';
+    if (item.kategori === 'Mileage') {
+      const dari = tr.querySelector('.dari'); if (dari) dari.value = item.dari || '';
+      const ke   = tr.querySelector('.ke');   if (ke)   ke.value   = item.ke   || '';
+      const tuju = tr.querySelector('.tujuan'); if (tuju) tuju.value = item.tujuan || '';
+      const km   = tr.querySelector('.km');   if (km)   { km.value = item.km || ''; calcMileage(km); }
+    } else {
+      const j = tr.querySelector('.jumlah');
+      if (j) { j.value = parseFloat(item.jumlah || 0).toFixed(2); calcTotal(); }
+    }
+  });
+  calcTotal();
+  const s = document.getElementById('statusMsg');
+  s.className = 'show loading';
+  s.innerHTML = '<i class="fa-solid fa-circle-info"></i> &nbsp;Mengisi semula berdasarkan tuntutan <strong>' + c.noClaim + '</strong>. No claim baru akan dijana semasa submit. Sila semak semua maklumat dan muat naik semula dokumen jika perlu.';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── URL PARAM: auto-trigger resubmit ── */
+(function() {
+  const r = new URLSearchParams(window.location.search).get('resubmit');
+  if (r) {
+    document.getElementById('checkNo').value = r.toUpperCase();
+    document.getElementById('statusSection').scrollIntoView({ behavior: 'smooth' });
+    checkClaimStatus();
+  }
+})();
+</script>
+</body>
+</html>

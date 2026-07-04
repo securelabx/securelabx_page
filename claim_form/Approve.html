@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leave Approval</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 30px 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      max-width: 640px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+      color: #fff;
+      padding: 28px 32px 20px;
+    }
+
+    .card-header h1 { font-size: 1.4rem; font-weight: 700; }
+    .card-header p  { font-size: 0.87rem; opacity: 0.85; margin-top: 4px; }
+
+    .card-body { padding: 28px 32px; }
+
+    /* Login */
+    #loginSection {}
+
+    .form-group { margin-bottom: 18px; }
+
+    label {
+      display: block;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 0.93rem;
+      color: #222;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.12); }
+
+    .btn {
+      display: inline-block;
+      padding: 11px 24px;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover   { opacity: 0.88; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .btn-primary  { background: #1a73e8; color: #fff; width: 100%; }
+    .btn-approve  { background: #0f9d58; color: #fff; flex: 1; }
+    .btn-reject   { background: #e53935; color: #fff; flex: 1; }
+
+    .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+
+    /* Application detail */
+    #appSection { display: none; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 8px 12px;
+      margin: 20px 0;
+      font-size: 0.88rem;
+    }
+
+    .detail-label { color: #666; font-weight: 600; }
+    .detail-value { color: #222; }
+
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #1a73e8;
+      border-bottom: 2px solid #e8f0fe;
+      padding-bottom: 5px;
+      margin: 20px 0 12px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .status-pending  { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+    .status-approved { background: #e6f4ea; color: #137333; border: 1px solid #a8d5b5; }
+    .status-rejected { background: #fdecea; color: #c62828; border: 1px solid #f5c6cb; }
+
+    #rejectReasonGroup { display: none; margin-top: 16px; }
+
+    textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    textarea:focus { border-color: #e53935; box-shadow: 0 0 0 3px rgba(229,57,53,0.12); }
+
+    /* Pending list */
+    #listSection { display: none; }
+
+    .app-card {
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .app-card:hover { border-color: #1a73e8; box-shadow: 0 2px 8px rgba(26,115,232,0.12); }
+
+    .app-card-highlight {
+      border-color: #1a73e8;
+      background: #f0f6ff;
+      box-shadow: 0 2px 10px rgba(26,115,232,0.15);
+    }
+    .app-card-name { font-weight: 700; font-size: 0.95rem; color: #202124; }
+    .app-card-meta { font-size: 0.82rem; color: #666; margin-top: 4px; }
+
+    /* Error / info */
+    .msg {
+      padding: 12px 16px;
+      border-radius: 7px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .msg-error   { background: #fdecea; color: #c62828; border: 1px solid #f5c6cb; }
+    .msg-success { background: #e6f4ea; color: #137333; border: 1px solid #a8d5b5; }
+    .msg-info    { background: #e8f0fe; color: #1a73e8; border: 1px solid #c5d8f8; }
+
+    .spinner-wrap { text-align: center; padding: 32px; color: #888; font-size: 0.9rem; }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+      color: #1a73e8;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .back-link:hover { text-decoration: underline; }
+
+    .manager-info {
+      font-size: 0.82rem;
+      color: #5f6368;
+      text-align: right;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 480px) {
+      .card-body { padding: 20px 16px; }
+      .card-header { padding: 20px 16px 16px; }
+      .detail-grid { grid-template-columns: 130px 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <h1>Leave Approval Portal</h1>
+    <p>Review and action leave applications from your team.</p>
+  </div>
+
+  <div class="card-body">
+
+    <!-- ============ LOGIN ============ -->
+    <div id="loginSection">
+      <div id="loginMsg"></div>
+      <div class="form-group">
+        <label for="loginId">Staff ID</label>
+        <input type="text" id="loginId" placeholder="e.g. SLX-001" />
+      </div>
+      <div class="form-group">
+        <label for="loginPwd">Password</label>
+        <input type="password" id="loginPwd" placeholder="Enter your password" />
+      </div>
+      <button class="btn btn-primary" id="loginBtn" onclick="doLogin()">Login</button>
+    </div>
+
+    <!-- ============ PENDING LIST ============ -->
+    <div id="listSection">
+      <div class="manager-info" id="managerInfo"></div>
+      <div class="section-title">Pending Leave Applications</div>
+      <div id="listMsg"></div>
+      <div id="appList"></div>
+    </div>
+
+    <!-- ============ APPLICATION DETAIL ============ -->
+    <div id="appSection">
+      <span class="back-link" onclick="showList()">&#8592; Back to list</span>
+      <div id="appMsg"></div>
+      <div id="appDetail"></div>
+
+      <div id="actionArea" style="display:none;">
+        <div class="section-title">Decision</div>
+        <div id="rejectReasonGroup">
+          <label for="rejectReason">Reason for Rejection <span style="color:#e53935;">*</span></label>
+          <textarea id="rejectReason" placeholder="Please explain why this leave is being rejected..."></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-approve" onclick="submitDecision('Approved')">&#10003; Approve</button>
+          <button class="btn btn-reject"  onclick="toggleReject()">&#10007; Reject</button>
+        </div>
+        <button class="btn btn-reject" id="confirmRejectBtn" style="display:none; margin-top:10px; width:100%;"
+          onclick="submitDecision('Rejected')">Confirm Rejection</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ▶ Replace with your Google Apps Script Web App URL
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUs2PEK4_zObDNu_2NOMLYcZAsbArmU12AJgd3-hWpQ4AhK2HwWP7vC0EVg0eZShJEKA/exec";
+  // Read the application reference from the URL query string (?ref=...)
+  var URL_REF    = new URLSearchParams(window.location.search).get("ref") || "";
+
+  var auth = null; // { staffId, password, name }
+
+  // ── Login ──────────────────────────────────────────────
+  document.getElementById("loginPwd").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") doLogin();
+  });
+
+  async function doLogin() {
+    var staffId  = document.getElementById("loginId").value.trim();
+    var password = document.getElementById("loginPwd").value;
+    var btn      = document.getElementById("loginBtn");
+    var msgEl    = document.getElementById("loginMsg");
+
+    if (!staffId || !password) {
+      showMsg(msgEl, "Please enter your Staff ID and password.", "error");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Logging in...";
+    msgEl.innerHTML = "";
+
+    try {
+      var url  = SCRIPT_URL + "?action=login&staffId=" + enc(staffId) + "&password=" + enc(password);
+      var resp = await fetch(url, { redirect: "follow" });
+      var text = await resp.text();
+      var data;
+      try { data = JSON.parse(text); } catch(pe) {
+        showMsg(msgEl, "Response error (not JSON). Check deployment settings.", "error");
+        console.error("Raw response:", text);
+        btn.disabled = false; btn.textContent = "Login";
+        return;
+      }
+
+      if (data.status !== "success") {
+        showMsg(msgEl, data.message || "Login failed.", "error");
+        btn.disabled = false; btn.textContent = "Login";
+        return;
+      }
+
+      auth = { staffId: staffId, password: password, name: data.name };
+
+      document.getElementById("loginSection").style.display = "none";
+
+      // Always show the full list first; highlight the linked application if ref is in URL
+      loadPendingList(URL_REF);
+
+    } catch(err) {
+      showMsg(msgEl, "Connection error: " + err.message, "error");
+      console.error("Login error:", err);
+      btn.disabled = false; btn.textContent = "Login";
+    }
+  }
+
+  // ── Pending list ────────────────────────────────────────
+  async function loadPendingList(highlightRef) {
+    document.getElementById("listSection").style.display = "block";
+    document.getElementById("appSection").style.display  = "none";
+    document.getElementById("managerInfo").textContent   = "Logged in as: " + auth.name + " (" + auth.staffId + ")";
+    document.getElementById("appList").innerHTML = '<div class="spinner-wrap">Loading pending applications...</div>';
+    document.getElementById("listMsg").innerHTML = "";
+
+    try {
+      var url  = SCRIPT_URL + "?action=getPending&staffId=" + enc(auth.staffId) + "&password=" + enc(auth.password);
+      var resp = await fetch(url);
+      var data = await resp.json();
+
+      if (data.status === "unauthorized") {
+        document.getElementById("appList").innerHTML = '<div class="msg msg-error">Session expired. Please refresh and log in again.</div>';
+        return;
+      }
+
+      var apps = data.applications || [];
+
+      if (apps.length === 0) {
+        document.getElementById("appList").innerHTML = '<div class="msg msg-info">No pending leave applications at this time.</div>';
+        return;
+      }
+
+      // If came from email link, sort highlighted app to the top
+      if (highlightRef) {
+        apps.sort(function(a, b) {
+          if ((a["Application ID"] || a["Submitted At"] || "") === highlightRef) return -1;
+          if ((b["Application ID"] || b["Submitted At"] || "") === highlightRef) return  1;
+          return 0;
+        });
+        document.getElementById("listMsg").innerHTML =
+          '<div class="msg msg-info">&#9660; The application from your email is shown first.</div>';
+      }
+
+      var html = '<div style="font-size:0.82rem;color:#5f6368;margin-bottom:12px;">' +
+        apps.length + ' pending application' + (apps.length !== 1 ? 's' : '') + ' awaiting your review</div>';
+
+      apps.forEach(function(app) {
+        var ref       = app["Application ID"] || app["Submitted At"] || "";
+        var isHighlight = highlightRef && ref === highlightRef;
+        var leaveType = app["Leave Type"] || "";
+        var days      = app["Total Leave Days"] || "";
+        var halfDay   = app["Half Day"] === "Yes" ? " (Half Day — " + (app["Session"] || "") + ")" : "";
+
+        html += '<div class="app-card' + (isHighlight ? ' app-card-highlight' : '') +
+          '" onclick="showAppByRef(\'' + escHtml(ref) + '\')">' +
+          (isHighlight ? '<div style="font-size:0.73rem;font-weight:700;color:#1a73e8;margin-bottom:6px;">&#9993; FROM YOUR EMAIL</div>' : '') +
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+          '<div>' +
+          '<div class="app-card-name">' + escHtml(app["Employee Name"] || "") +
+          ' <span style="color:#888;font-weight:400;font-size:0.83rem;">(' + escHtml(app["Staff ID"] || "") + ')</span></div>' +
+          '<div class="app-card-meta" style="margin-top:4px;">' + escHtml(app["Department"] || "") + ' &nbsp;·&nbsp; ' + escHtml(app["Position"] || "") + '</div>' +
+          '<div class="app-card-meta" style="margin-top:3px;">' +
+          escHtml(leaveType) + escHtml(halfDay) +
+          ' &nbsp;|&nbsp; ' + escHtml(app["Start Date"] || "") + ' — ' + escHtml(app["End Date"] || "") +
+          '</div>' +
+          '</div>' +
+          '<div style="text-align:right;flex-shrink:0;margin-left:12px;">' +
+          '<div style="font-size:1.3rem;font-weight:800;color:#1a73e8;">' + escHtml(String(days)) + '</div>' +
+          '<div style="font-size:0.72rem;color:#888;">day(s)</div>' +
+          '<div style="margin-top:6px;font-size:0.75rem;color:#999;">' + escHtml(app["Submitted At"] ? app["Submitted At"].split(" ")[0] : "") + '</div>' +
+          '</div>' +
+          '</div>' +
+          '</div>';
+      });
+
+      document.getElementById("appList").innerHTML = html;
+
+    } catch {
+      document.getElementById("appList").innerHTML = '<div class="msg msg-error">Failed to load applications.</div>';
+    }
+  }
+
+  // ── Show specific application ────────────────────────────
+  async function showAppByRef(ref) {
+    document.getElementById("listSection").style.display = "none";
+    document.getElementById("appSection").style.display  = "block";
+    document.getElementById("appDetail").innerHTML = '<div class="spinner-wrap">Loading application...</div>';
+    document.getElementById("actionArea").style.display  = "none";
+    document.getElementById("appMsg").innerHTML = "";
+
+    try {
+      var url  = SCRIPT_URL + "?action=getApplication&ref=" + enc(ref) + "&staffId=" + enc(auth.staffId) + "&password=" + enc(auth.password);
+      var resp = await fetch(url);
+      var data = await resp.json();
+
+      if (data.status === "not_found") {
+        document.getElementById("appDetail").innerHTML = '<div class="msg msg-error">Application not found.</div>';
+        return;
+      }
+
+      var app    = data.application;
+      var status = app["Status"] || "Pending";
+
+      var statusClass = status === "Approved" ? "status-approved" : status === "Rejected" ? "status-rejected" : "status-pending";
+
+      var html =
+        '<div class="section-title">Employee Information</div>' +
+        '<div class="detail-grid">' +
+        row("Employee Name", app["Employee Name"]) +
+        row("Staff ID",      app["Staff ID"]) +
+        row("Department",    app["Department"]) +
+        row("Position",      app["Position"]) +
+        row("Email",         app["Email"]) +
+        row("Phone",         app["Phone"]) +
+        '</div>' +
+        '<div class="section-title">Leave Details</div>' +
+        '<div class="detail-grid">' +
+        row("Leave Type",    app["Leave Type"]) +
+        (app["Compassionate Type"] ? row("Family Relation", app["Compassionate Type"]) : "") +
+        (app["Half Day"] === "Yes"  ? row("Half Day", "Yes — " + (app["Session"] || "")) : "") +
+        row("Start Date",    app["Start Date"]) +
+        row("End Date",      app["End Date"]) +
+        row("Total Days",    app["Total Leave Days"]) +
+        row("Reason",        app["Reason"]) +
+        row("Submitted At",  app["Submitted At"]) +
+        row("Status",        '<span class="status-badge ' + statusClass + '">' + escHtml(status) + '</span>') +
+        (app["Rejection Reason"] ? row("Rejection Reason", '<span style="color:#c62828;">' + escHtml(app["Rejection Reason"]) + '</span>') : "") +
+        (app["Decision By"]      ? row("Decision By", app["Decision By"]) : "") +
+        (app["Decision Date"]    ? row("Decision Date", app["Decision Date"]) : "") +
+        '</div>';
+
+      document.getElementById("appDetail").innerHTML = html;
+      document.getElementById("appDetail")._ref = ref;
+
+      // Show action buttons only if still pending
+      if (status === "Pending") {
+        document.getElementById("actionArea").style.display = "block";
+        document.getElementById("rejectReasonGroup").style.display = "none";
+        document.getElementById("confirmRejectBtn").style.display  = "none";
+        document.getElementById("rejectReason").value = "";
+      }
+
+    } catch {
+      document.getElementById("appDetail").innerHTML = '<div class="msg msg-error">Failed to load application details.</div>';
+    }
+  }
+
+  function showList() {
+    if (auth) loadPendingList(null);
+  }
+
+  function toggleReject() {
+    var grp = document.getElementById("rejectReasonGroup");
+    var cfm = document.getElementById("confirmRejectBtn");
+    var visible = grp.style.display === "block";
+    grp.style.display = visible ? "none" : "block";
+    cfm.style.display = visible ? "none" : "block";
+    if (!visible) document.getElementById("rejectReason").focus();
+  }
+
+  // ── Submit decision ─────────────────────────────────────
+  async function submitDecision(status) {
+    var ref    = document.getElementById("appDetail")._ref;
+    var reason = "";
+
+    if (status === "Rejected") {
+      reason = document.getElementById("rejectReason").value.trim();
+      if (!reason) {
+        showMsg(document.getElementById("appMsg"), "Please enter a reason for rejection.", "error");
+        return;
+      }
+    }
+
+    var msgEl = document.getElementById("appMsg");
+    showMsg(msgEl, "Submitting decision...", "info");
+    document.getElementById("actionArea").style.display = "none";
+
+    try {
+      var url = SCRIPT_URL +
+        "?action=updateStatus" +
+        "&ref="      + enc(ref) +
+        "&staffId="  + enc(auth.staffId) +
+        "&password=" + enc(auth.password) +
+        "&status="   + enc(status) +
+        "&reason="   + enc(reason);
+
+      var resp = await fetch(url);
+      var data = await resp.json();
+
+      if (data.status === "success") {
+        showMsg(msgEl,
+          status === "Approved"
+            ? "&#10003; Leave application approved. The employee has been notified."
+            : "&#10007; Leave application rejected. The employee has been notified.",
+          status === "Approved" ? "success" : "error"
+        );
+        // Return to list after short delay so manager can see the next application
+        setTimeout(function() { loadPendingList(null); }, 2000);
+      } else {
+        showMsg(msgEl, "Failed to update: " + (data.message || "Unknown error"), "error");
+        document.getElementById("actionArea").style.display = "block";
+      }
+
+    } catch {
+      showMsg(msgEl, "Connection error. Please try again.", "error");
+      document.getElementById("actionArea").style.display = "block";
+    }
+  }
+
+  // ── Helpers ─────────────────────────────────────────────
+  function row(label, value) {
+    return '<div class="detail-label">' + escHtml(label) + '</div>' +
+           '<div class="detail-value">'  + (value || '<span style="color:#bbb;">—</span>') + '</div>';
+  }
+
+  function showMsg(el, msg, type) {
+    el.innerHTML = '<div class="msg msg-' + type + '">' + msg + '</div>';
+  }
+
+  function enc(s) { return encodeURIComponent(s || ""); }
+
+  function escHtml(s) {
+    return String(s || "")
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;");
+  }
+</script>
+</body>
+</html>

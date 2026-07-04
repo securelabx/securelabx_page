@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SLX – OM Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root{--navy:#1b3560;--navy-dark:#122444;--navy-light:#2a4a7f;--accent:#2563eb;--gold:#f59e0b;--success:#16a34a;--danger:#dc2626;--bg:#f0f4f8;--card:#fff;--border:#dde3ed;--text:#1e293b;--muted:#64748b;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;}
+
+    .header{background:linear-gradient(135deg,#0f2038,#1b3560 60%,#1e4080);padding:18px 28px;display:flex;align-items:center;gap:14px;}
+    .header h1{color:#fff;font-size:17px;font-weight:700;}
+    .header p{color:rgba(255,255,255,.7);font-size:11px;margin-top:2px;}
+    .header-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+    .role-badge{background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+    .form-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;}
+
+    .wrap{max-width:1200px;margin:22px auto;padding:0 16px;}
+
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+    .stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+    .stat-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+    .stat-val{font-size:22px;font-weight:800;color:var(--navy);}
+    .stat-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;}
+
+    .toolbar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+    .tabs{display:flex;gap:5px;}
+    .tab{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s;}
+    .tab.active,.tab:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+    .ml-auto{margin-left:auto;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:none;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;transition:filter .15s;}
+    .btn:hover{filter:brightness(1.07);}
+    .btn-ghost{background:#f1f5f9;color:var(--text);border:1px solid var(--border);}
+    .btn-lulus{background:var(--success);color:#fff;}
+    .btn-tolak{background:var(--danger);color:#fff;}
+    .btn-purple{background:#7c3aed;color:#fff;}
+    .btn-navy{background:var(--navy);color:#fff;}
+
+    .tcard{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.05);}
+    table{width:100%;border-collapse:collapse;}
+    thead th{background:var(--navy);color:#fff;padding:10px;font-size:12px;font-weight:600;text-align:left;white-space:nowrap;}
+    thead th:first-child{padding-left:16px;}
+    tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+    tbody tr:last-child{border-bottom:none;}
+    tbody tr:hover{background:#eff6ff;}
+    tbody td{padding:10px;font-size:13px;vertical-align:middle;}
+    tbody td:first-child{padding-left:16px;}
+    .empty{text-align:center;padding:36px;color:var(--muted);font-style:italic;}
+
+    .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+    .b-pending{background:#dbeafe;color:#1e40af;}
+    .b-lulus{background:#dcfce7;color:#166534;}
+    .b-tolak{background:#fee2e2;color:#991b1b;}
+    .b-done{background:#f1f5f9;color:#475569;}
+
+    /* MODAL */
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto;}
+    .overlay.open{display:flex;}
+    .modal{background:#fff;border-radius:12px;width:100%;max-width:880px;box-shadow:0 10px 40px rgba(0,0,0,.2);margin:auto;}
+    .mhead{background:var(--navy);color:#fff;padding:15px 20px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;}
+    .mhead h2{font-size:14px;}
+    .xbtn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;}
+    .mbody{padding:20px;}
+
+    .igrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 16px;margin-bottom:14px;}
+    .irow .lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;}
+    .irow .val{font-size:13px;color:var(--text);margin-top:2px;}
+
+    .sec-title{font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px;display:flex;align-items:center;gap:7px;}
+    .sec-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+    .admin-note{background:#fef3c7;border-left:4px solid #f59e0b;border-radius:4px;padding:10px 12px;font-size:12.5px;margin-bottom:14px;}
+    .admin-note strong{color:#78350f;}
+
+    .itable{width:100%;border-collapse:collapse;font-size:12px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+    .itable th{background:var(--navy);color:#fff;padding:8px;text-align:left;}
+    .itable td{border-top:1px solid var(--border);padding:7px 8px;vertical-align:top;}
+    .itable tr:nth-child(even) td{background:#f8fafc;}
+    .flink{color:var(--accent);text-decoration:none;font-size:11px;display:block;}
+    .dlink{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:12px;font-weight:600;text-decoration:none;margin-bottom:10px;}
+
+    /* DECISION BOX */
+    .dbox{margin-top:14px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
+    .dbox-title{background:#f8fafc;padding:12px 16px;font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;border-bottom:1px solid var(--border);}
+    .dbox-body{padding:16px;}
+    .ffield{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+    .ffield label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;}
+    .ffield textarea{padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;outline:none;width:100%;min-height:60px;resize:vertical;}
+    .ffield textarea:focus{border-color:var(--accent);}
+    .decision-btns{display:flex;gap:10px;flex-wrap:wrap;}
+    .big-btn{padding:12px 24px;font-size:14px;border-radius:8px;border:none;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .15s;}
+    .big-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
+    .big-btn-lulus{background:#16a34a;color:#fff;}
+    .big-btn-tolak{background:#dc2626;color:#fff;}
+
+    .msg{display:none;padding:10px 13px;border-radius:7px;font-size:12.5px;font-weight:600;margin-top:10px;align-items:center;gap:7px;}
+    .msg.show{display:flex;}
+    .msg.ok{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;}
+    .msg.err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+    .msg.load{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;}
+    .spinner{width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    @media(max-width:860px){.stats{grid-template-columns:1fr 1fr;}.igrid{grid-template-columns:1fr 1fr;}}
+
+    /* LOGIN */
+    .login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0f2038,#1b3560);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px;}
+    .login-screen.hidden{display:none;}
+    .login-card{background:#fff;border-radius:14px;padding:36px 40px;width:100%;max-width:400px;box-shadow:0 16px 48px rgba(0,0,0,.3);}
+    .login-logo{text-align:center;margin-bottom:20px;}
+    .login-logo h2{color:#1b3560;font-size:18px;font-weight:800;margin-top:8px;}
+    .login-logo p{color:#64748b;font-size:12px;margin-top:3px;}
+    .login-badge{display:inline-block;background:#dcfce7;color:#166534;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px;}
+    .lfield{margin-bottom:14px;}
+    .lfield label{display:block;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+    .lfield input{width:100%;padding:10px 12px;border:1.5px solid #dde3ed;border-radius:7px;font-size:14px;outline:none;transition:border-color .15s;}
+    .lfield input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+    .login-btn{width:100%;padding:12px;background:#1b3560;color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;transition:filter .15s;}
+    .login-btn:hover{filter:brightness(1.1);}
+    .login-err{display:none;background:#fee2e2;color:#991b1b;border:1px solid #fecaca;padding:9px 12px;border-radius:6px;font-size:12.5px;font-weight:600;margin-top:10px;text-align:center;}
+    .login-err.show{display:block;}
+    .logout-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;}
+    .logout-btn:hover{background:rgba(255,255,255,.2);}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <i class="fa-solid fa-building-shield" style="font-size:32px;color:#1b3560"></i>
+      <h2>SECURE LABX SDN. BHD.</h2>
+      <p>Sistem Pengurusan Tuntutan</p>
+      <span class="login-badge"><i class="fa-solid fa-user-check"></i> OM Portal</span>
+    </div>
+    <div class="lfield">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Masukkan username" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <div class="lfield">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Masukkan password" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="login-btn" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> &nbsp;Log Masuk</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<div class="header">
+  <div>
+    <h1><i class="fa-solid fa-building-shield"></i> &nbsp;SECURE LABX SDN. BHD.</h1>
+    <p>Sistem Pengurusan Tuntutan / Claim Management System</p>
+  </div>
+  <div class="header-right">
+    <span class="role-badge"><i class="fa-solid fa-user-check"></i> Operations Manager</span>
+    <span class="form-badge">FIN-007-F01</span>
+    <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Log Keluar</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-icon" style="background:#dbeafe"><i class="fa-solid fa-inbox" style="color:#1e40af"></i></div>
+      <div><div class="stat-val" id="s0">–</div><div class="stat-lbl">Pending Kelulusan</div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon" style="background:#dcfce7"><i class="fa-solid fa-thumbs-up" style="color:#16a34a"></i></div>
+      <div><div class="stat-val" id="s1">–</div><div class="stat-lbl">Lulus</div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon" style="background:#fee2e2"><i class="fa-solid fa-thumbs-down" style="color:#dc2626"></i></div>
+      <div><div class="stat-val" id="s2">–</div><div class="stat-lbl">Tolak</div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon" style="background:#fef3c7"><i class="fa-solid fa-coins" style="color:#92400e"></i></div>
+      <div><div class="stat-val" id="s3">RM–</div><div class="stat-lbl">Jumlah Lulus</div></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="tabs">
+      <button class="tab active" onclick="setFilter('pending',this)">Pending Kelulusan</button>
+      <button class="tab" onclick="setFilter('all',this)">Semua Rekod</button>
+    </div>
+    <div class="ml-auto" style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" onclick="load()"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+    </div>
+  </div>
+
+  <div class="tcard">
+    <table>
+      <thead><tr>
+        <th>No Claim</th><th>Tarikh</th><th>Nama Staff</th><th>Jabatan</th>
+        <th>Jumlah (RM)</th><th>Catatan Admin</th><th>Keputusan OM</th><th>PDF</th><th></th>
+      </tr></thead>
+      <tbody id="tbody"><tr><td colspan="9" class="empty"><span class="spinner"></span> Memuatkan...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="ov" onclick="if(event.target===this)closeOv()">
+  <div class="modal">
+    <div class="mhead">
+      <h2 id="mtitle">Butiran Claim</h2>
+      <button class="xbtn" onclick="closeOv()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="mbody" id="mbody"></div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyoTtVdUZMeXbtLgf_WeiGejsieRRxPZzPXi2aCUdz3ynxv2Xs1dBuNKZ_5vj1mWH8R/exec';
+let claims = [], filterMode = 'pending';
+
+// ── AUTH ──
+function checkAuth() {
+  const session = sessionStorage.getItem('slx_om');
+  if (session === 'true') { document.getElementById('loginScreen').classList.add('hidden'); load(); }
+}
+
+async function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  const err = document.getElementById('loginErr');
+  err.classList.remove('show');
+  if (!u || !p) { err.textContent = 'Sila isi username dan password.'; err.classList.add('show'); return; }
+  const btn = document.querySelector('.login-btn');
+  btn.innerHTML = '<span class="spinner"></span> Mengesahkan...'; btn.disabled = true;
+  try {
+    const d = await (await fetch(`${API}?action=login&username=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}&role=om`)).json();
+    if (d.success) {
+      sessionStorage.setItem('slx_om', 'true');
+      document.getElementById('loginScreen').classList.add('hidden');
+      load();
+    } else {
+      err.textContent = d.error || 'Login gagal.'; err.classList.add('show');
+    }
+  } catch { err.textContent = 'Gagal sambung ke server.'; err.classList.add('show'); }
+  btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> &nbsp;Log Masuk'; btn.disabled = false;
+}
+
+function logout() {
+  sessionStorage.removeItem('slx_om');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  claims = [];
+}
+
+async function load() {
+  document.getElementById('tbody').innerHTML = '<tr><td colspan="8" class="empty"><span class="spinner"></span> Memuatkan...</td></tr>';
+  try {
+    // Load all OM-related claims
+    const [pendingRes, allRes] = await Promise.all([
+      fetch(API + '?action=getClaims&role=om').then(r => r.json()),
+      fetch(API + '?action=getClaims&role=all').then(r => r.json())
+    ]);
+    const allClaims = allRes.claims || [];
+    const pending = pendingRes.claims || [];
+    const decided = allClaims.filter(c => c.keputusanOM === 'Lulus' || c.keputusanOM === 'Tolak');
+    claims = [...pending, ...decided.filter(d => !pending.find(p => p.noClaim === d.noClaim))];
+    stats(pending, decided);
+    render();
+  } catch { document.getElementById('tbody').innerHTML = '<tr><td colspan="8" class="empty" style="color:#dc2626">Gagal muatkan data.</td></tr>'; }
+}
+
+function stats(pending, decided) {
+  const lulus = decided.filter(c => c.keputusanOM === 'Lulus');
+  const tolak = decided.filter(c => c.keputusanOM === 'Tolak');
+  const total = lulus.reduce((s, c) => s + Number(c.jumlah || 0), 0);
+  document.getElementById('s0').textContent = pending.length;
+  document.getElementById('s1').textContent = lulus.length;
+  document.getElementById('s2').textContent = tolak.length;
+  document.getElementById('s3').textContent = 'RM ' + total.toFixed(2);
+}
+
+function setFilter(f, btn) {
+  filterMode = f;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  let rows = [...claims];
+  if (filterMode === 'pending') rows = rows.filter(c => c.keputusanOM === 'Pending OM' || !c.keputusanOM);
+  const tb = document.getElementById('tbody');
+  if (!rows.length) { tb.innerHTML = '<tr><td colspan="9" class="empty">Tiada rekod pending.</td></tr>'; return; }
+  tb.innerHTML = rows.map(c => `<tr onclick="openClaim('${c.noClaim}')">
+    <td><strong>${c.noClaim}</strong></td>
+    <td>${c.tarikhPermohonan}</td>
+    <td>${c.nama}<br><small style="color:#64748b">${c.staffId}</small></td>
+    <td>${c.jabatan}</td>
+    <td style="font-weight:700;color:#1b3560">RM ${c.jumlah}</td>
+    <td style="font-size:12px;max-width:180px">${c.catatanAdmin || '–'}</td>
+    <td>${badge(c)}</td>
+    <td>${c.pdfLink ? `<a href="${c.pdfLink}" target="_blank" onclick="event.stopPropagation()" style="color:#7c3aed;font-size:18px;" title="Buka PDF"><i class="fa-solid fa-file-pdf"></i></a>` : '<span style="color:#cbd5e1;font-size:13px">–</span>'}</td>
+    <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="event.stopPropagation();openClaim('${c.noClaim}')"><i class="fa-solid fa-gavel"></i> Semak</button></td>
+  </tr>`).join('');
+}
+
+function badge(c) {
+  if (c.keputusanOM === 'Lulus') return '<span class="badge b-lulus"><i class="fa-solid fa-check"></i> Lulus</span>';
+  if (c.keputusanOM === 'Tolak') return '<span class="badge b-tolak"><i class="fa-solid fa-xmark"></i> Tolak</span>';
+  return '<span class="badge b-pending"><i class="fa-solid fa-clock"></i> Pending OM</span>';
+}
+
+async function openClaim(no) {
+  document.getElementById('mtitle').textContent = 'Kelulusan OM – ' + no;
+  document.getElementById('mbody').innerHTML = '<div style="text-align:center;padding:30px"><span class="spinner"></span></div>';
+  document.getElementById('ov').classList.add('open');
+  try {
+    const d = await (await fetch(API + '?action=getClaimDetails&noClaim=' + encodeURIComponent(no))).json();
+    if (!d.success) throw new Error(d.error);
+    drawModal(d.claim);
+  } catch (e) { document.getElementById('mbody').innerHTML = '<p style="color:#dc2626;padding:16px">Ralat: ' + e.message + '</p>'; }
+}
+
+function drawModal(c) {
+  const decided = c.keputusanOM === 'Lulus' || c.keputusanOM === 'Tolak';
+  const items = (c.items || []).map(item => `<tr>
+    <td>${item.bil}</td><td>${item.tarikh}</td><td>${item.kategori}</td>
+    <td>${item.keterangan || '–'}</td><td>${item.noResit || '–'}</td>
+    <td>${item.kategori === 'Mileage' ? item.km + ' km' : '–'}</td>
+    <td style="font-weight:700">RM ${item.jumlah}</td>
+    <td>${(item.fileLinks || '').split('\n').filter(Boolean).map((l,i)=>`<a class="flink" href="${l}" target="_blank">Fail ${i+1}</a>`).join('') || '–'}</td>
+  </tr>`).join('');
+
+  const decisionSection = decided ? `
+    <div class="dbox">
+      <div class="dbox-title"><i class="fa-solid fa-check-circle"></i> Keputusan OM Telah Direkodkan</div>
+      <div class="dbox-body">
+        <div class="igrid" style="grid-template-columns:1fr 1fr 1fr;">
+          <div class="irow"><div class="lbl">Keputusan</div><div class="val">${badge(c)}</div></div>
+          <div class="irow"><div class="lbl">Tarikh Keputusan</div><div class="val">${c.tarikhOM || '–'}</div></div>
+          <div class="irow"><div class="lbl">Catatan OM</div><div class="val">${c.catatanOM || '–'}</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+          <button class="btn btn-purple" onclick="genPDF('${c.noClaim}')"><i class="fa-solid fa-file-pdf"></i> Jana PDF</button>
+          ${c.pdfLink ? `<a class="btn" style="background:#16a34a;color:#fff" href="${c.pdfLink}" target="_blank"><i class="fa-solid fa-download"></i> Muat Turun PDF</a>` : ''}
+          <button class="btn btn-ghost" onclick="closeOv()">Tutup</button>
+        </div>
+        <div class="msg" id="dmsg"></div>
+      </div>
+    </div>` : `
+    <div class="dbox">
+      <div class="dbox-title"><i class="fa-solid fa-gavel"></i> Keputusan OM</div>
+      <div class="dbox-body">
+        <div class="ffield">
+          <label>Catatan / Alasan Keputusan</label>
+          <textarea id="omCatatan" placeholder="Masukkan catatan atau alasan keputusan anda..."></textarea>
+        </div>
+        <div class="decision-btns">
+          <button class="big-btn big-btn-lulus" onclick="decide('${c.noClaim}','Lulus')">
+            <i class="fa-solid fa-thumbs-up"></i> LULUS
+          </button>
+          <button class="big-btn big-btn-tolak" onclick="decide('${c.noClaim}','Tolak')">
+            <i class="fa-solid fa-thumbs-down"></i> TOLAK
+          </button>
+          <button class="btn btn-purple" onclick="genPDF('${c.noClaim}')"><i class="fa-solid fa-file-pdf"></i> Jana PDF</button>
+          <button class="btn btn-ghost" onclick="closeOv()">Batal</button>
+        </div>
+        <div class="msg" id="dmsg"></div>
+      </div>
+    </div>`;
+
+  document.getElementById('mbody').innerHTML = `
+    <div class="igrid">
+      <div class="irow"><div class="lbl">No Claim</div><div class="val" style="font-weight:800">${c.noClaim}</div></div>
+      <div class="irow"><div class="lbl">Tarikh</div><div class="val">${c.tarikhPermohonan}</div></div>
+      <div class="irow"><div class="lbl">Staff ID</div><div class="val">${c.staffId}</div></div>
+      <div class="irow"><div class="lbl">Nama</div><div class="val">${c.nama}</div></div>
+      <div class="irow"><div class="lbl">Jabatan</div><div class="val">${c.jabatan}</div></div>
+      <div class="irow"><div class="lbl">Jawatan</div><div class="val">${c.jawatan}</div></div>
+      <div class="irow"><div class="lbl">Email</div><div class="val">${c.email}</div></div>
+      <div class="irow"><div class="lbl">Jumlah Tuntutan</div><div class="val" style="font-size:18px;font-weight:800;color:#1b3560">RM ${c.jumlah}</div></div>
+      <div class="irow"><div class="lbl">PDF Tuntutan</div><div class="val">${c.pdfLink ? `<a href="${c.pdfLink}" target="_blank" style="color:#7c3aed;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:5px;"><i class="fa-solid fa-file-pdf"></i> Buka / Muat Turun PDF</a>` : '<span style="color:#94a3b8;font-size:12px">Belum dijana</span>'}</div></div>
+    </div>
+    ${c.catatanAdmin ? `<div class="admin-note"><strong>Catatan Admin:</strong> ${c.catatanAdmin}</div>` : ''}
+    ${c.folderUrl ? `<a class="dlink" href="${c.folderUrl}" target="_blank"><i class="fa-brands fa-google-drive"></i> Buka Folder Dokumen Google Drive</a>` : ''}
+    <div class="sec-title"><i class="fa-solid fa-list-check"></i> Butiran Item Tuntutan</div>
+    <table class="itable">
+      <thead><tr><th>Bil</th><th>Tarikh</th><th>Kategori</th><th>Keterangan</th><th>No Resit</th><th>KM</th><th>Jumlah</th><th>Dokumen</th></tr></thead>
+      <tbody>${items || '<tr><td colspan="8" style="text-align:center;padding:12px;color:#64748b">Tiada item.</td></tr>'}</tbody>
+    </table>
+    ${decisionSection}`;
+}
+
+async function decide(no, keputusan) {
+  const catatan = (document.getElementById('omCatatan') || {}).value || '';
+  const m = document.getElementById('dmsg');
+  showMsg(m, 'load', 'Merekodkan keputusan...');
+  try {
+    const d = await (await fetch(`${API}?action=omDecision&noClaim=${encodeURIComponent(no)}&keputusan=${encodeURIComponent(keputusan)}&catatan=${encodeURIComponent(catatan)}`)).json();
+    if (!d.success) throw new Error(d.error);
+    showMsg(m, 'ok', (keputusan === 'Lulus' ? '✓ Claim LULUS berjaya direkodkan!' : '✓ Claim DITOLAK berjaya direkodkan.'));
+    setTimeout(() => { closeOv(); load(); }, 1600);
+  } catch (e) { showMsg(m, 'err', '✗ ' + e.message); }
+}
+
+async function genPDF(no) {
+  const m = document.getElementById('dmsg');
+  showMsg(m, 'load', 'Menjana PDF... sila tunggu ~20 saat');
+  try {
+    const d = await (await fetch(`${API}?action=generatePDF&noClaim=${encodeURIComponent(no)}`)).json();
+    if (!d.success) throw new Error(d.error);
+    showMsg(m, 'ok', '✓ PDF berjaya! <a href="' + d.pdfUrl + '" target="_blank" style="margin-left:8px;color:#166534;font-weight:800">Buka PDF</a>');
+  } catch (e) { showMsg(m, 'err', '✗ ' + e.message); }
+}
+
+function showMsg(el, t, html) {
+  el.className = 'msg show ' + (t === 'ok' ? 'ok' : t === 'load' ? 'load' : 'err');
+  el.innerHTML = (t === 'load' ? '<span class="spinner"></span> ' : '') + html;
+}
+
+function closeOv() { document.getElementById('ov').classList.remove('open'); }
+
+checkAuth();
+</script>
+</body>
+</html>

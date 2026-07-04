@@ -74,7 +74,7 @@ Then on GitHub:
 ```
 index.html              Company info / home page
 leave-request.html       Leave Request form
-claim-request.html       Claim Request form
+claim_form/claim_form.html  Claim Request form (staff claim system)
 assets/css/style.css     Shared styling
 assets/js/config.js      Password hash + Apps Script URL (edit these)
 assets/js/auth.js         Password gate logic
