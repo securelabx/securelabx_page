@@ -151,10 +151,18 @@ main.slx-main {
   gap: 1rem;
 }
 
-.slx-services div {
+.slx-services a {
+  display: block;
   background: var(--slx-bg);
   border-radius: 8px;
   padding: 1rem;
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.slx-services a:hover {
+  background: #e8ecf3;
 }
 
 .slx-services h3 {
