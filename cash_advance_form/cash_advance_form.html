@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Cash Advance Application | SecureLabX</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    :root { --ca-navy: #11203b; --ca-blue: #15458c; --ca-border: #dce3ed; --ca-muted: #57647a; --ca-bg: #f3f5f9; }
+    * { box-sizing: border-box; }
+    .ca-main { max-width: 1020px; margin: 46px auto 72px; padding: 0 24px; color: var(--ca-navy); }
+    .ca-topline { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px; }
+    .ca-back { font-weight:650; color:var(--ca-blue); text-decoration:none; }
+    .ca-tag { font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; background:#e7edf7; color:#234c87; border:1px solid #cfdcf1; padding:8px 12px; border-radius:40px; }
+    .ca-hero { margin-bottom:24px; }
+    .ca-hero h1 { color:var(--ca-navy); font-size:clamp(25px,3vw,34px); line-height:1.2; margin:0 0 10px; }
+    .ca-hero p { margin:0; color:var(--ca-muted); line-height:1.55; }
+    .ca-banner { padding:15px 18px; background:#fdf8e8; border:1px solid #eddfb8; border-radius:11px; color:#68501b; font-size:14px; line-height:1.55; margin-bottom:22px; }
+    .ca-card { background:white; border:1px solid var(--ca-border); border-radius:14px; margin:0 0 20px; padding:24px 28px; box-shadow:0 2px 10px rgba(16,32,59,.025); }
+    .ca-heading { display:flex; align-items:center; gap:11px; padding-bottom:17px; border-bottom:1px solid var(--ca-border); margin-bottom:20px; }
+    .ca-step { flex:0 0 auto; display:grid; place-items:center; height:30px; width:30px; border-radius:50%; color:white; background:var(--ca-navy); font-size:14px; font-weight:700; }
+    .ca-heading h2 { font-size:19px; margin:0; color:var(--ca-navy); }
+    .ca-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:17px 20px; }
+    .ca-field { display:flex; flex-direction:column; gap:7px; min-width:0; }
+    .ca-field.ca-full { grid-column:1/-1; }
+    .ca-field label, .ca-label { color:#24324b; font-weight:650; font-size:14px; }
+    .ca-required { color:#b43e43; }
+    .ca-field input, .ca-field select, .ca-field textarea, .ca-row input, .ca-row select {
+      width:100%; min-width:0; background:white; color:#182844; border:1px solid #cbd5e2;
+      border-radius:8px; font:inherit; font-size:15px; padding:11px 12px; outline:none;
+    }
+    .ca-field input:focus, .ca-field select:focus, .ca-field textarea:focus, .ca-row input:focus, .ca-row select:focus { outline:2px solid #afc8ee; outline-offset:1px; border-color:var(--ca-blue); }
+    .ca-field textarea { min-height:100px; resize:vertical; }
+    .ca-help { color:var(--ca-muted); font-size:12px; line-height:1.5; }
+    .ca-budget-heading { display:grid; grid-template-columns:1.05fr 1.5fr .65fr 38px; gap:10px; margin-bottom:8px; font-size:12px; font-weight:700; color:var(--ca-muted); }
+    .ca-row { display:grid; grid-template-columns:1.05fr 1.5fr .65fr 38px; gap:10px; margin-bottom:10px; align-items:start; }
+    .ca-row input, .ca-row select { font-size:14px; height:43px; padding:8px; }
+    .ca-remove { height:43px; border:1px solid #e6d2d2; background:#fff8f8; color:#9b2b32; border-radius:8px; font-size:22px; cursor:pointer; }
+    .ca-remove:disabled { opacity:.35; cursor:not-allowed; }
+    .ca-budget-bottom { display:flex; justify-content:space-between; align-items:center; gap:15px; margin-top:16px; flex-wrap:wrap; }
+    .ca-add { background:white; color:var(--ca-blue); border:1px solid #9fbbde; border-radius:8px; padding:9px 14px; cursor:pointer; font-weight:700; }
+    .ca-total { background:#eff4fb; color:var(--ca-navy); border:1px solid #d5e1f1; padding:12px 16px; border-radius:9px; min-width:245px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+    .ca-total strong { font-size:19px; white-space:nowrap; }
+    .ca-check { display:flex; gap:11px; line-height:1.5; color:#24324b; font-size:14px; align-items:flex-start; }
+    .ca-check input { height:18px; width:18px; flex:0 0 auto; margin-top:2px; accent-color:var(--ca-blue); }
+    .ca-actions { display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end; margin-top:20px; }
+    .ca-btn { appearance:none; border-radius:9px; padding:12px 20px; cursor:pointer; font-size:14px; font-weight:750; border:1px solid #b8c6d9; background:white; color:var(--ca-blue); }
+    .ca-primary { background:var(--ca-blue); color:white; border-color:var(--ca-blue); }
+    .ca-smallnote { margin-top:15px; color:var(--ca-muted); font-size:12px; line-height:1.5; }
+    .ca-disabled { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin:25px 0 15px; padding:15px 18px; background:#f1f4f8; border:1px dashed #c7d2e0; border-radius:11px; color:#526078; font-size:14px; }
+    .ca-disabled strong { color:#213650; }
+    .ca-hidden { display:none !important; }
+    #ca-preview { margin-top:24px; }
+    .ca-reviewtable { border-collapse:collapse; width:100%; }
+    .ca-reviewtable th, .ca-reviewtable td { padding:9px 10px; border-bottom:1px solid #e8edf3; text-align:left; vertical-align:top; font-size:14px; overflow-wrap:anywhere; }
+    .ca-reviewtable th { width:34%; color:#5c6880; font-weight:600; }
+    .ca-reviewtitle { color:#182e4c; font-size:16px; margin:22px 0 8px; }
+    .ca-reviewlist { margin:0; padding-left:18px; font-size:14px; line-height:1.7; }
+    .ca-print-meta { display:none; }
+    .ca-inactive { opacity:.85; }
+    .ca-footer { margin:24px 0; text-align:center; font-size:12px; color:var(--ca-muted); }
+    .ca-file-note { background:#f5f7fb; padding:11px 13px; border-radius:8px; font-size:12px; color:#4d5b73; }
+    @media(max-width:700px) {
+      .ca-main { margin:28px auto 45px; padding:0 14px; }
+      .ca-card { padding:19px 16px; }
+      .ca-grid { grid-template-columns:1fr; }
+      .ca-budget-heading { display:none; }
+      .ca-row { grid-template-columns:1fr 1fr 38px; padding-bottom:11px; border-bottom:1px solid var(--ca-border); }
+      .ca-row .ca-item-category { grid-column:1/-1; }
+      .ca-total { width:100%; }
+      .ca-actions { flex-direction:column; }
+      .ca-btn { width:100%; }
+    }
+    @media print {
+      @page { size:A4; margin:14mm; }
+      body { background:#fff !important; }
+      #slx-gate,.slx-header,.slx-footer,.ca-topline,.ca-hero,.ca-banner,#ca-form,.ca-disabled,.ca-actions,.ca-smallnote,.ca-footer { display:none !important; }
+      #slx-content,#ca-preview { display:block !important; }
+      .ca-main { max-width:none; margin:0; padding:0; }
+      .ca-card { box-shadow:none; border:0; padding:0; }
+      .ca-print-meta { display:block; text-align:right; font-size:10px; color:#555; }
+      .ca-heading { border-bottom:2px solid #162b49; }
+      .ca-reviewtable th,.ca-reviewtable td { font-size:12px; padding:6px; }
+      .ca-no-print { display:none !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Uses the same gate IDs / existing auth scripts as the SecureLabX home page. -->
+  <div id="slx-gate">
+    <div class="slx-gate-card">
+      <h1>SecureLabX</h1>
+      <p class="subtitle">Enter the access password to continue</p>
+      <form id="slx-gate-form">
+        <input type="password" id="slx-gate-password" placeholder="Password" autocomplete="current-password" required />
+        <button type="submit">Unlock</button>
+        <p id="slx-gate-error">Incorrect password. Please try again.</p>
+      </form>
+    </div>
+  </div>
+  <div id="slx-content">
+    <header class="slx-header">
+      <div class="slx-brand">SecureLabX</div>
+      <nav class="slx-nav" aria-label="Main navigation">
+        <a href="../index.html">Home</a>
+        <a href="../claim_form/claim_form.html">Claim Request</a>
+        <a href="cash_advance_form.html" class="active" aria-current="page">Cash Advance Application</a>
+        <a href="../purchase_request_form/purchase_request_form.html">Purchase Request Application</a>
+      </nav>
+    </header>
+    <main class="ca-main">
+      <div class="ca-topline"><a class="ca-back" href="../index.html">← Back to Home</a><span class="ca-tag">Business Cash Advance · Draft Form</span></div>
+      <div class="ca-hero">
+        <h1>Business Cash Advance Application</h1>
+        <p>Request an advance for legitimate SecureLabX business-related expenses, projects, and work activities.</p>
+      </div>
+      <div class="ca-banner" role="note"><strong>Form preparation stage.</strong> This version lets you fill in, review, and print/save your application as a PDF. <strong>It does not submit data, upload documents, assign a reference number, or send requests to Finance yet.</strong> The approval and records system will be connected in the next stage.</div>
+      <form id="ca-form" novalidate>
+        <section class="ca-card" aria-labelledby="ca-employee-heading">
+          <div class="ca-heading"><span class="ca-step">1</span><h2 id="ca-employee-heading">Employee Details</h2></div>
+          <div class="ca-grid">
+            <div class="ca-field"><label for="employeeName">Full Name <span class="ca-required">*</span></label><input id="employeeName" name="employeeName" autocomplete="name" required maxlength="120" /></div>
+            <div class="ca-field"><label for="employeeId">Employee ID (if available)</label><input id="employeeId" name="employeeId" maxlength="40" /></div>
+            <div class="ca-field"><label for="department">Department <span class="ca-required">*</span></label><select id="department" name="department" required><option value="">Select department</option><option>Operations</option><option>Technical &amp; Engineering</option><option>Support</option><option>Sales &amp; Marketing</option><option>Finance</option><option>Human Resources &amp; Administration</option><option>Management</option><option>Other</option></select></div>
+            <div class="ca-field"><label for="employeeEmail">Work Email <span class="ca-required">*</span></label><input type="email" id="employeeEmail" name="employeeEmail" autocomplete="email" required maxlength="160" /></div>
+            <div class="ca-field"><label for="jobTitle">Position / Job Title</label><input id="jobTitle" name="jobTitle" maxlength="100" /></div>
+            <div class="ca-field"><label for="supervisor">Immediate Supervisor</label><input id="supervisor" name="supervisor" maxlength="120" /></div>
+          </div>
+        </section>
+        <section class="ca-card" aria-labelledby="ca-request-heading">
+          <div class="ca-heading"><span class="ca-step">2</span><h2 id="ca-request-heading">Advance Request Details</h2></div>
+          <div class="ca-grid">
+            <div class="ca-field"><label for="purposeCategory">Purpose Category <span class="ca-required">*</span></label><select id="purposeCategory" name="purposeCategory" required><option value="">Select category</option><option>Travel / Outstation</option><option>Accommodation</option><option>Transport / Fuel / Toll / Parking</option><option>Site Operations / Project Expenses</option><option>Urgent Business Purchase</option><option>Client / Business Meeting</option><option>Other Business Purpose</option></select></div>
+            <div class="ca-field"><label for="requiredDate">Date Funds Required <span class="ca-required">*</span></label><input type="date" id="requiredDate" name="requiredDate" required /></div>
+            <div class="ca-field ca-full"><label for="projectReference">Project / Client / Site (if applicable)</label><input id="projectReference" name="projectReference" maxlength="180" placeholder="E.g. client name, project, or site location" /></div>
+            <div class="ca-field ca-full"><label for="businessJustification">Purpose &amp; Justification <span class="ca-required">*</span></label><textarea id="businessJustification" name="businessJustification" maxlength="1500" required placeholder="Explain why the cash advance is needed and how it will be used."></textarea></div>
+          </div>
+        </section>
+        <section class="ca-card" aria-labelledby="ca-budget-heading">
+          <div class="ca-heading"><span class="ca-step">3</span><h2 id="ca-budget-heading">Estimated Expenses (RM)</h2></div>
+          <p class="ca-help">Break down the requested amount. At least one expense line and an amount above RM 0 are required.</p>
+          <div class="ca-budget-heading"><span>Expense Category</span><span>Description</span><span>Estimated RM</span><span></span></div>
+          <div id="ca-budget-rows"></div>
+          <div class="ca-budget-bottom"><button class="ca-add" id="ca-add-row" type="button">+ Add Expense</button><div class="ca-total"><span>Total Requested</span><strong id="ca-total-value">RM 0.00</strong></div></div>
+        </section>
+        <section class="ca-card" aria-labelledby="ca-settlement-heading">
+          <div class="ca-heading"><span class="ca-step">4</span><h2 id="ca-settlement-heading">Settlement &amp; Supporting Documents</h2></div>
+          <div class="ca-grid">
+            <div class="ca-field"><label for="expectedSettlement">Expected Expense Settlement Date</label><input type="date" id="expectedSettlement" name="expectedSettlement" /><span class="ca-help">Indicative date for submitting receipts or reconciling the advance. Subject to SLX policy.</span></div>
+            <div class="ca-field"><label for="attachments">Supporting Documents (optional)</label><input id="attachments" name="attachments" type="file" accept=".pdf,.png,.jpg,.jpeg,.xlsx,.xls" multiple /><span class="ca-help">Quotes, itinerary, expense estimate or supporting records.</span></div>
+            <div class="ca-field ca-full"><div class="ca-file-note">Files selected here <strong>are not uploaded or saved</strong> by this draft form. Keep the original files for submission through the final system.</div></div>
+          </div>
+        </section>
+        <section class="ca-card" aria-labelledby="ca-declaration-heading">
+          <div class="ca-heading"><span class="ca-step">5</span><h2 id="ca-declaration-heading">Applicant Declaration</h2></div>
+          <label class="ca-check" for="declaration"><input type="checkbox" id="declaration" name="declaration" required /><span>I confirm that the information is accurate, the advance is for company business, and I will provide supporting receipts and account for any unused amount according to company policy.</span></label>
+          <div class="ca-actions"><button type="reset" class="ca-btn">Clear Form</button><button type="button" class="ca-btn ca-primary" id="ca-review">Review Application →</button></div>
+          <p class="ca-smallnote">Required fields are marked *. No information leaves your browser while you use this form.</p>
+        </section>
+      </form>
+      <section id="ca-preview" class="ca-card ca-hidden" aria-labelledby="ca-preview-title" tabindex="-1">
+        <div class="ca-print-meta">SecureLabX · Business Cash Advance Application · Applicant Copy (Not Submitted)</div>
+        <div class="ca-heading"><span class="ca-step">✓</span><h2 id="ca-preview-title">Application Review / Printable Copy</h2></div>
+        <p class="ca-help">This is a preview only. It is <strong>not an approved request</strong> and has not been sent to Finance.</p>
+        <table class="ca-reviewtable" id="ca-review-table"><tbody></tbody></table>
+        <h3 class="ca-reviewtitle">Expense Breakdown</h3>
+        <ol id="ca-review-items" class="ca-reviewlist"></ol>
+        <h3 class="ca-reviewtitle" id="ca-review-total"></h3>
+        <p class="ca-smallnote">Applicant acknowledgement recorded on this local copy only. Supporting documents are not attached. Reference number and approval status: Not assigned.</p>
+        <div class="ca-actions ca-no-print"><button type="button" id="ca-edit" class="ca-btn">← Edit Form</button><button type="button" id="ca-print" class="ca-btn ca-primary">Print / Save as PDF</button></div>
+      </section>
+      <section class="ca-disabled" aria-label="Approval workflow (planned)"><span><strong>Next stage: Finance &amp; Management workflow</strong><br />Finance review → Management approval → Payment recording → Receipt submission and settlement. These actions are planned and are not yet available in this draft.</span><span class="ca-tag ca-inactive">Not Connected</span></section>
+      <aside class="ca-disabled" aria-label="Future salary advance"><span><strong>Salary Advance</strong><br />Reserved for future implementation after HR policy and approval rules are finalized.</span><span class="ca-tag ca-inactive">Not Active</span></aside>
+      <p class="ca-footer">SecureLabX · Internal business use only</p>
+    </main>
+    <footer class="slx-footer">&copy; <span id="slx-year"></span> SecureLabX. Internal use only.</footer>
+  </div>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    (function(){
+      'use strict';
+      document.getElementById('slx-year').textContent = String(new Date().getFullYear());
+      const form = document.getElementById('ca-form');
+      const rows = document.getElementById('ca-budget-rows');
+      const preview = document.getElementById('ca-preview');
+      const fmt = value => new Intl.NumberFormat('en-MY', {style:'currency',currency:'MYR'}).format(value);
+      const categories = ['Travel / Transport','Accommodation','Fuel / Toll / Parking','Project / Site Expenses','Urgent Purchase','Client Meeting','Other'];
+      function makeRow(){
+        const row = document.createElement('div'); row.className = 'ca-row';
+        const select = document.createElement('select'); select.className = 'ca-item-category'; select.setAttribute('aria-label','Expense category'); select.required = true;
+        const empty = document.createElement('option'); empty.value=''; empty.textContent='Select category'; select.append(empty);
+        categories.forEach(category => { const option=document.createElement('option'); option.textContent=category; select.append(option); });
+        const description = document.createElement('input'); description.type='text'; description.maxLength=240; description.required=true; description.placeholder='Description'; description.setAttribute('aria-label','Expense description');
+        const amount = document.createElement('input'); amount.type='number'; amount.min='0.01'; amount.max='99999999'; amount.step='0.01'; amount.required=true; amount.placeholder='0.00'; amount.setAttribute('aria-label','Estimated amount in RM');
+        const remove = document.createElement('button'); remove.type='button'; remove.className='ca-remove'; remove.textContent='×'; remove.title='Remove expense'; remove.setAttribute('aria-label','Remove expense');
+        remove.addEventListener('click', () => { row.remove(); updateBudget(); });
+        amount.addEventListener('input',updateBudget);
+        row.append(select, description, amount, remove); rows.append(row); updateBudget();
+      }
+      function expenseRows(){ return Array.from(rows.querySelectorAll('.ca-row')); }
+      function totalValue(){ return expenseRows().reduce((sum,row) => sum + (Number(row.children[2].value)||0), 0); }
+      function updateBudget(){
+        document.getElementById('ca-total-value').textContent=fmt(totalValue());
+        const only=expenseRows().length===1;
+        expenseRows().forEach(row=>row.children[3].disabled=only);
+      }
+      function addReviewRow(label,value){
+        const tr=document.createElement('tr'); const th=document.createElement('th'); const td=document.createElement('td');
+        th.textContent=label; td.textContent=value||'—'; tr.append(th,td); document.querySelector('#ca-review-table tbody').append(tr);
+      }
+      function currentValue(id){ return document.getElementById(id).value.trim(); }
+      function review(){
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        if (totalValue()<=0 || !Number.isFinite(totalValue())) { alert('Please enter at least one valid estimated expense amount.'); return; }
+        const tbody=document.querySelector('#ca-review-table tbody'); tbody.replaceChildren();
+        [
+          ['Applicant Name',currentValue('employeeName')], ['Employee ID',currentValue('employeeId')],
+          ['Department',currentValue('department')], ['Position',currentValue('jobTitle')], ['Immediate Supervisor',currentValue('supervisor')],
+          ['Work Email',currentValue('employeeEmail')], ['Purpose Category',currentValue('purposeCategory')],
+          ['Date Funds Required',currentValue('requiredDate')], ['Project / Client / Site',currentValue('projectReference')],
+          ['Purpose & Justification',currentValue('businessJustification')],
+          ['Expected Settlement Date',currentValue('expectedSettlement')],
+          ['Supporting Documents', Array.from(document.getElementById('attachments').files).map(f=>f.name).join(', ') || 'None selected (not uploaded)'],
+          ['Record Status','Draft only – Not Submitted']
+        ].forEach(([a,b])=>addReviewRow(a,b));
+        const list=document.getElementById('ca-review-items'); list.replaceChildren();
+        expenseRows().forEach(row=>{const li=document.createElement('li'); li.textContent=`${row.children[0].value} — ${row.children[1].value}: ${fmt(Number(row.children[2].value))}`; list.append(li);});
+        document.getElementById('ca-review-total').textContent='Total Requested: '+fmt(totalValue());
+        form.classList.add('ca-hidden'); preview.classList.remove('ca-hidden'); preview.focus();
+      }
+      document.getElementById('ca-add-row').addEventListener('click', makeRow);
+      document.getElementById('ca-review').addEventListener('click', review);
+      document.getElementById('ca-edit').addEventListener('click',()=>{ preview.classList.add('ca-hidden'); form.classList.remove('ca-hidden'); form.scrollIntoView({behavior:'smooth'}); });
+      document.getElementById('ca-print').addEventListener('click',()=>window.print());
+      form.addEventListener('reset',()=>{ preview.classList.add('ca-hidden'); form.classList.remove('ca-hidden'); setTimeout(()=>{ rows.replaceChildren(); makeRow(); },0); });
+      makeRow();
+    })();
+  </script>
+</body>
+</html>
