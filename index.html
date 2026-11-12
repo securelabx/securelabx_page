@@ -138,6 +138,20 @@ body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.7 'Plus Jak
 @media(max-width:860px){#slx-content .slx-services{grid-template-columns:repeat(2,minmax(0,1fr))}#slx-content .slx-hero{grid-template-columns:1fr;gap:0;min-height:auto}#slx-content .hero-art{display:none}#slx-content .intro-panel{grid-template-columns:1fr}#slx-content .slx-nav{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}#slx-content .section-heading{align-items:flex-start}#slx-content .approval-card{flex-wrap:wrap}#slx-content .approval-action{margin-left:86px}}
 @media(max-width:640px){#slx-content .slx-header{padding:11px 14px;gap:9px}#slx-content .slx-brand{font-size:18px}#slx-content .brand-mark{height:39px;width:39px;border-radius:11px}#slx-content .slx-nav a{font-size:11px;padding:8px 10px}#slx-content .slx-main{padding:18px 14px 45px}#slx-content .slx-hero{padding:35px 24px;border-radius:19px}#slx-content .slx-hero h1{font-size:32px;letter-spacing:-1px}#slx-content .slx-hero .lead{font-size:13px}#slx-content .hero-actions{gap:9px}#slx-content .hero-btn{width:100%}#slx-content .intro-card{padding:22px}#slx-content .section-heading{display:block;margin:34px 0 16px}#slx-content .section-heading h2{font-size:23px}#slx-content .section-heading p{text-align:left;margin-top:7px}#slx-content .slx-services{grid-template-columns:1fr}#slx-content .service-card{padding:24px 23px}#slx-content .process{grid-template-columns:1fr;gap:9px}#slx-content .process-item:not(:last-child)::after{content:"↓";right:calc(50% - 4px);top:auto;bottom:-18px;transform:none}#slx-content .approval-card{flex-direction:column;align-items:flex-start;padding:22px 20px;gap:11px}#slx-content .approval-info h3{font-size:15px}#slx-content .approval-action{width:100%;margin:0}#slx-content .notice{padding:17px 16px}#slx-back-top{right:13px;bottom:13px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#slx-content *,#slx-content *::before,#slx-content *::after{animation:none!important;transition:none!important}#slx-back-top{transition:none}}
+
+/* SLX official programme templates: navigation and cards only */
+#slx-content #templates{scroll-margin-top:120px}
+#slx-content .doc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+#slx-content .doc-card{padding:25px 26px;border:1px solid #D5E6E0;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(17,49,70,.045)}
+#slx-content .doc-stage{display:inline-block;border-radius:99px;padding:5px 11px;background:#EAF4EE;color:#36685C;font-size:11px;font-weight:800;letter-spacing:.4px}
+#slx-content .doc-card h3{margin:15px 0 8px;color:#12344D;font-size:18px;line-height:1.4}
+#slx-content .doc-card p{font-size:12.5px;line-height:1.8;color:#687D88;margin:0 0 17px}
+#slx-content .doc-card .doc-ref{font-size:11px;color:#668277;font-weight:700}
+#slx-content .doc-action{display:inline-flex;align-items:center;gap:10px;border:1px solid #B9D7CB;border-radius:11px;padding:11px 15px;background:#EFF8F3;color:#215C51!important;font-size:12.5px;font-weight:800;text-decoration:none}
+#slx-content .doc-action:hover,#slx-content .doc-action:focus-visible{background:#DDEFE7}
+#slx-content .doc-note{margin-top:15px;padding:15px 17px;border:1px solid #DFE9E5;border-radius:12px;background:#F7FAF8;color:#5E7778;font-size:11.5px;line-height:1.75}
+#slx-content .doc-note a{color:#20665D}
+@media(max-width:700px){#slx-content .doc-grid{grid-template-columns:1fr}#slx-content .doc-card{padding:22px 20px}}
 </style>
 </head>
 <body>
@@ -163,6 +177,7 @@ body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.7 'Plus Jak
       <a class="nav-feature" href="claim_form/dashboard.html">Claim Dashboard ↗</a>
       <a href="https://script.google.com/macros/s/AKfycbx4iBJ4kCzPxj4_gWT8E-dr0n1TlCt_-ikyGUvIaXJ5-uUkg5db8K-AGAieKJ2CPg6H/exec" target="_blank" rel="noopener noreferrer">Cash Advance ↗</a>
       <a href="#management">Kelulusan</a>
+      <a href="#templates">Dokumen &amp; Template Rasmi</a>
     </nav>
   </header>
 
@@ -252,6 +267,27 @@ body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.7 'Plus Jak
           <span class="approval-action">Buka PR Dashboard <span aria-hidden="true">↗</span></span>
         </a>
       </div>
+    </section>
+
+    <section id="templates" aria-labelledby="templates-heading">
+      <div class="section-heading"><div><span class="kicker">Dokumen Dalaman SLX</span><h2 id="templates-heading">Dokumen &amp; Template Rasmi</h2></div><p>Pengurusan Program &amp; Aktiviti · Sebelum dan selepas program.</p></div>
+      <div class="doc-grid">
+        <article class="doc-card">
+          <span class="doc-stage">01 · SEBELUM PROGRAM</span>
+          <h3>Kertas Cadangan Aktiviti</h3>
+          <p>Perancangan, objektif, jadual, anggaran bajet dan permohonan kelulusan pengurusan.</p>
+          <p class="doc-ref">SLX-OPS-TPL-ACT-001 · Versi 1.0</p>
+          <a class="doc-action" href="https://drive.google.com/file/d/1tjuJclanVem29vFLF_o0eQrniyCoQVwz/view" target="_blank" rel="noopener noreferrer" aria-label="Buka Kertas Cadangan Aktiviti di Google Drive">Buka Template <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="doc-card">
+          <span class="doc-stage">02 · SELEPAS PROGRAM</span>
+          <h3>Laporan Aktiviti &amp; Kewangan</h3>
+          <p>Pencapaian program, belanja sebenar, resit, penyelesaian Cash Advance, tindakan susulan dan pengesahan Finance.</p>
+          <p class="doc-ref">SLX-OPS-TPL-ACT-002 · Versi 1.0</p>
+          <a class="doc-action" href="https://drive.google.com/file/d/1pQdOB7BN9S3ZIuB0s0PisDHauUZ4XzE1/view" target="_blank" rel="noopener noreferrer" aria-label="Buka Laporan Aktiviti dan Kewangan di Google Drive">Buka Template <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+      <div class="doc-note">Template ini berstatus draf untuk kelulusan pengurusan. Sila buat salinan bagi setiap program dan kekalkan fail induk. Akses fail bergantung pada kebenaran Google Drive. <a href="https://drive.google.com/drive/folders/1XaEz_34LgQUH8fZNMmOnchTyfRaFsuej" target="_blank" rel="noopener noreferrer">Buka folder template ↗</a></div>
     </section>
 
     <aside class="notice" aria-labelledby="notice-heading"><span class="notice-symbol" aria-hidden="true">i</span><div><h3 id="notice-heading">Makluman Akses &amp; Status Sistem</h3><p>Semua permohonan dan kelulusan tertakluk kepada polisi syarikat. Pembayaran sebenar diurus melalui Jabatan Kewangan mengikut proses yang ditetapkan. Jika aplikasi Google memaparkan ralat akses, gunakan profil Chrome yang log masuk dengan akaun Google yang dibenarkan.</p></div></aside>
